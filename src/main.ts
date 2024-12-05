@@ -17,7 +17,7 @@ async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
         AppModule,
         new FastifyAdapter()
-    );
+    );  
 
     app.use(morgan('dev'));
     app.useGlobalPipes(
