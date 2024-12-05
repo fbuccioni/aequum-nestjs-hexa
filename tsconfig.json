@@ -4,7 +4,7 @@
         "module": "nodenext",
         "declaration": false,
         "removeComments": true,
-        "emitDecoratorMetadata": true,
+        "emitDecoratorMetadat       a": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
         "useDefineForClassFields": false,
