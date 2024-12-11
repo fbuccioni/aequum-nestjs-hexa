@@ -2,8 +2,10 @@
     "$schema": "https://json.schemastore.org/nest-cli",
     "collection": "@nestjs/schematics",
     "sourceRoot": "src",
+    "entryFile": "application/api/main",
     "compilerOptions": {
         "builder": "swc",
-        "typeCheck": true
+        "typeCheck": true,
+        "deleteOutDir": true
     }
 }

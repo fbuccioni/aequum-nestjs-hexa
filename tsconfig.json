@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
         "target": "es2022",
-        "module": "nodenext",
+        "module": "commonjs",
         "declaration": false,
         "removeComments": true,
-        "emitDecoratorMetadat       a": true,
+        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
         "useDefineForClassFields": false,
@@ -15,10 +15,10 @@
         "incremental": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
     },
     "include": [
-        "src",
+        "src/",
         "./src/**/*.ts",
         "test",
         "e2e",
