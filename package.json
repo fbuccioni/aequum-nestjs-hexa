@@ -1,5 +1,6 @@
 {
-    "name": "hometask",
+    "name": "nestjs-hexagonal-boilerplate",
+    "title": "NestJS hexagonal Boilerplate",
     "version": "0.0.1",
     "description": "Boilerplate for NestJS (TypeScript) to make an http service with hexagonal arch.",
     "author": {
