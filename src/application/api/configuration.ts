@@ -24,5 +24,8 @@ export default () => {
             port,
             env: process.env.NODE_ENV,
         },
+        api: {
+            version: process.env.API_VERSION,
+        },
     };
 };
