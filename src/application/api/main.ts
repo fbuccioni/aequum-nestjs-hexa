@@ -1,5 +1,5 @@
 import morgan from 'morgan';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -8,10 +8,6 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 
-/**
- * Main entry point of the application
- * @returns Nothing`
- */
 async function bootstrap() {
     // Http Server using fastify
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -28,6 +24,9 @@ async function bootstrap() {
 
     try {
         const configService = app.get(ConfigService);
+        const pathPrefix = `api/${configService.get<string>('api.version')}`;
+
+        app.setGlobalPrefix(pathPrefix);
 
         // OpenAPI
         const config = new DocumentBuilder()
@@ -37,7 +36,7 @@ async function bootstrap() {
             .build();
 
         const document = SwaggerModule.createDocument(app, config);
-        SwaggerModule.setup('api', app, document);
+        SwaggerModule.setup(`${pathPrefix}/spec`    , app, document);
 
         let [ port, host ] = [
             configService.get<number>('app.port'),
