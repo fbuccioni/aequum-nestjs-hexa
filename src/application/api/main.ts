@@ -36,12 +36,12 @@ async function bootstrap() {
             .build();
 
         const document = SwaggerModule.createDocument(app, config);
-        SwaggerModule.setup(`${pathPrefix}/spec`    , app, document);
+        SwaggerModule.setup(`${pathPrefix}/spec`, app, document);
 
         let [ port, host ] = [
             configService.get<number>('app.port'),
             configService.get<string>('app.host')
-        ]
+        ];
 
         await app.listen(port, host, () =>
             Logger.log(
