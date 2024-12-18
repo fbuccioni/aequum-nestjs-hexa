@@ -10,7 +10,7 @@ import { HttpResponseModule } from '../../shared/nestjs/http-response/http-respo
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
 import configuration from './configuration';
-import typeORMConfiguration from '../../infrastructure/persistence/database/typeorm.config';
+import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
 
 import { ExampleModule } from './example/example.module';
 

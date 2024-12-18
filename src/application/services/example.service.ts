@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { ExampleRepository } from '../../infrastructure/persistence/database/repositories/example.repository';
-import { Example } from '../../infrastructure/persistence/database/entities';
+import { ExampleRepository } from '../../infrastructure/database/repositories/example.repository';
+import { Example } from '../../infrastructure/database/entities';
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
 
 

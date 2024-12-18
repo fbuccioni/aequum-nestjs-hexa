@@ -1,8 +1,8 @@
-import { URIToDataSourceOptions } from '../../../shared/common/utils/typeorm.utils';
+import { URIToDataSourceOptions } from '../../shared/common/utils/typeorm.utils';
 
 import * as Entities from './entities';
-import * as env from '../../../shared/common/utils/env.utils';
-import * as moduleUtils from '../../../shared/common/utils/module.util';
+import * as env from '../../shared/common/utils/env.utils';
+import * as moduleUtils from '../../shared/common/utils/module.util';
 
 
 env.load()

@@ -30,9 +30,9 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "typeorm": "sh -c 'ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js \"$0\" -d ./src/infrastructure/persistence/database/typeorm.datasource.ts \"$@\"'",
-        "migration:create": "sh -c 'npx typeorm migration:create \"./src/infrastructure/persistence/database/migrations/$0\" \"$@\"'",
-        "migration:generate": "sh -c 'npm run typeorm -- migration:generate \"./src/infrastructure/persistence/database/migrations/$0\" \"$@\"'",
+        "typeorm": "sh -c 'ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js \"$0\" -d src/infrastructure/database/typeorm.datasource.ts \"$@\"'",
+        "migration:create": "sh -c 'npx typeorm migration:create \"src/infrastructure/database/migrations/$0\" \"$@\"'",
+        "migration:generate": "sh -c 'npm run typeorm -- migration:generate \"src/infrastructure/database/migrations/$0\" \"$@\"'",
         "migration:run": "npm run typeorm -- migration:run",
         "migration:revert": "npm run typeorm -- migration:revert"
     },
