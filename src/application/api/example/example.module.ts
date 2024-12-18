@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExampleService } from '../../services/example.service';
 import { ExampleController } from './controllers/example.controller';
-import { Example, ExampleSchema } from '../../../infrastructure/persistence/database/schemas/example.schema';
-import { ExampleRepository } from 'src/infrastructure/persistence/database/repositories/example.repository';
+import { Example, ExampleSchema } from '../../../infrastructure/database/schemas/example.schema';
+import { ExampleRepository } from 'src/infrastructure/database/repositories/example.repository';
 
 
 @Module({

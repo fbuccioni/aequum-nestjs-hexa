@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import {
     ExampleQueryFilter,
     ExampleRepository,
-} from '../../infrastructure/persistence/database/repositories/example.repository';
+} from '../../infrastructure/database/repositories/example.repository';
 
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
 
