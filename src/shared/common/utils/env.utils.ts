@@ -1,14 +1,11 @@
-export function getHostAndPortFrommEnvironment(): [string, number] {
-    const listen = process.env.APP_LISTEN;
-    let port, host;
+import dotenv from 'dotenv';
+import { expand } from 'dotenv-expand';
 
-    if (/^\d+$/.test(listen)) port = listen;
-    else if (/:/.test(listen)) [host, port] = listen.split(':');
-    else host = listen;
 
-    if (!port) port = 8000;
+export function load() {
+    expand(dotenv.config());
+}
 
-    if (!host) host = '127.0.0.1';
-
-    return [host, port];
+export function asBoolean(s: string) {
+    return ['y', 'yes', '1', 'true', 't'].includes(s.toLowerCase())
 }
