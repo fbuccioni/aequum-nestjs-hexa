@@ -1,15 +1,11 @@
-version: '3.3'
-
 services:
-  grover:
-    image: ${IMAGE_NAME}:${IMAGE_VERSION}
+  api:
+    image: ${CONTAINER_IMAGE_NAME}:${CONTAINER_IMAGE_VERSION}
+    container_name: ${CONTAINER_NAME}
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ${CONTAINER_NAME}
     restart: always
+    env_file: .env
     ports:
-      - ${LOCAL_PORT}:${NODE_PORT}
-    environment:
-      - NODE_ENV=  ${NODE_ENV}
-      - NODE_PORT= ${NODE_PORT}
+      - ${API_LISTEN_PORT:-8085}:${CONTAINER_LISTEN_PORT:-8085}
