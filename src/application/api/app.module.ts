@@ -8,7 +8,7 @@ import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
-import { ExampleModule } from './example.module';
+import { ExampleModule } from './example/example.module';
 import configuration from './configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 
