@@ -9,3 +9,39 @@ services:
     env_file: .env
     ports:
       - ${API_LISTEN_PORT:-8085}:${CONTAINER_LISTEN_PORT:-8085}
+#    environment:
+#      - DATABASE_MAIN_URI=mysql://root:d4t4b4s3p455@db.mysql/nestjs_api
+#      - DATABASE_MAIN_URI=postgres://nestjs_api:d4t4b4s3p455@db.postgres/nestjs_api
+#    depends_on:
+#      - db.mysql
+#      - db.postgres
+
+#  db.mysql:
+#    image: mysql
+#    container_name: ${CONTAINER_NAME}-mysql
+#    environment:
+#      - MYSQL_USER=nestjs_api
+#      - MYSQL_PASSWORD=d4t4b4s3p455
+#      - MYSQL_ROOT_PASSWORD=d4t4b4s3p455
+#      - MYSQL_DATABASE=nestjs_api
+#    ports:
+#      - 33060:3306
+#    volumes:
+#      - db.mysql:/var/lib/mysql
+
+#  db.postgres:
+#    image: postgres
+#    restart: unless-stopped
+#    container_name: ${CONTAINER_NAME}-postgres
+#    environment:
+#      - POSTGRES_USER=nestjs_api
+#      - POSTGRES_PASSWORD=d4t4b4s3p455
+#      - POSTGRES_DB=nestjs_api
+#    ports:
+#      - 54320:5432
+#    volumes:
+#      - db.postgres:/var/lib/postgres
+
+#volumes:
+#  db.mysql:
+#  db.postgres:
