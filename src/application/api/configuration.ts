@@ -1,7 +1,6 @@
 import * as path from 'node:path';
 
 import { readFileSync } from 'node:fs';
-import * as envUtils from '../../shared/common/utils/env.utils';
 
 
 /**
@@ -9,7 +8,10 @@ import * as envUtils from '../../shared/common/utils/env.utils';
  * @returns configuration taken from env
  */
 export default () => {
-    const [ host, port ] = envUtils.hostAndPort(process.env.APP_LISTEN);
+    const [ host, port ] = [
+        process.env.APP_LISTEN_HOST || 'localhost',
+        ( +process.env.APP_LISTEN_PORT ) || 8085
+    ];
     const { name, title, version, description }: any = JSON.parse(
         readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
     );
