@@ -1,3 +1,3 @@
 export * from './example.dto';
-export * from './exampleCreate.dto';
-export * from './exampleUpdate.dto';
+export * from './example-create.dto';
+export * from './example-update.dto';
