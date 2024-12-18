@@ -11,9 +11,9 @@ import {
 
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
-import { Example } from '../../domain/models/example.model';
-import { ExampleService } from '../services/example.service';
+import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../../dtos';
+import { Example } from '../../../domain/models/example.model';
+import { ExampleService } from '../../services/example.service';
 import { ParseObjectIdPipe } from 'src/shared/common/pipes/object-id.pipe';
 
 @ApiTags('Example')
