@@ -9,3 +9,22 @@ services:
     env_file: .env
     ports:
       - ${API_LISTEN_PORT:-8085}:${CONTAINER_LISTEN_PORT:-8085}
+#    depends_on:
+#      - db.mongo
+#    environment:
+#      - DATABASE_MAIN_URI=mongodb://nestjs_api:d4t4b4s3p455@db.mongo/nestjs_api?authSource=admin
+
+#  db.mongo:
+#    image: mongo
+#    container_name: ${CONTAINER_NAME}-mongodb
+#    restart: always
+#    environment:
+#      - MONGO_INITDB_ROOT_USERNAME=nestjs_api
+#      - MONGO_INITDB_ROOT_PASSWORD=d4t4b4s3p455
+#    ports:
+#      - '37017:27017'
+#    volumes:
+#      - db.mongo:/data/db
+
+#volumes:
+#  db.mongo:
