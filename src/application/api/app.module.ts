@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
@@ -38,7 +38,7 @@ import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
         HttpResponseModule,
         HealthModule,
         SharedInfrastructureModule,
-        ...moduleUtil.toFlattenArray(APIModules),
+        ...moduleUtil.toFlattenArray(APIModules) as DynamicModule[],
     ],
     providers: [
         {
