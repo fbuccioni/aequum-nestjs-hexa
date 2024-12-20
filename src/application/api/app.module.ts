@@ -4,15 +4,16 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+import * as moduleUtil from '../../shared/nestjs/utils/module.util';
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
+import { SharedInfrastructureModule } from './shared-infrastructure.module';
+import  * as APIModules from './api-modules.export';
 import configuration from './configuration';
 import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
-
-import { ExampleModule } from './example/example.module';
 
 
 /**
@@ -36,7 +37,8 @@ import { ExampleModule } from './example/example.module';
         LoggerModule,
         HttpResponseModule,
         HealthModule,
-        ExampleModule,
+        SharedInfrastructureModule,
+        ...moduleUtil.toFlattenArray(APIModules),
     ],
     providers: [
         {
