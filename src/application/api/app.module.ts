@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -38,7 +38,7 @@ import configuration from './configuration';
         HttpResponseModule,
         HealthModule,
         SharedInfrastructureModule,
-        ...moduleUtil.toFlattenArray(APIModules),
+        ...moduleUtil.toFlattenArray(APIModules) as DynamicModule[],
     ],
     providers: [
         {
