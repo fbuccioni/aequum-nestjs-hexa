@@ -6,6 +6,7 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
+import { CommonExceptionFilter } from '../../shared/nestjs/common-exception/filters/common-exception.filter';
 
 
 async function bootstrap() {
@@ -27,6 +28,7 @@ async function bootstrap() {
         const pathPrefix = `api/${configService.get<string>('api.version')}`;
 
         app.setGlobalPrefix(pathPrefix);
+        app.useGlobalFilters(new CommonExceptionFilter())
 
         // OpenAPI
         const config = new DocumentBuilder()

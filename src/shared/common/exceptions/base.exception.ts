@@ -1,4 +1,4 @@
-export default class BaseException extends Error {
+export class BaseException extends Error {
     static code = null;
     readonly code = undefined;
 
@@ -10,6 +10,18 @@ export default class BaseException extends Error {
         this.name = self.name;
         if (self.code) this.code = self.code;
         if (stack) this.stack = stack;
+
+        const enumPropDesc = (e: boolean) => ({
+            enumerable: e,
+            writable: true,
+            configurable: false,
+        });
+
+        for (let prop in [ 'code', 'name' ]) {
+            Object.defineProperty(this, prop, enumPropDesc(false));
+        }
+
+        Object.defineProperty(this, 'message', enumPropDesc(true));
     }
 }
 

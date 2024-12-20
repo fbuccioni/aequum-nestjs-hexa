@@ -1,7 +1,7 @@
-import BaseException from '../base.exception';
+import { BaseException } from '../base.exception';
 
 
-export default class NotFoundException extends BaseException {
+export class NotFoundException extends BaseException {
     static code = 'ERR_NOT_FOUND';
 
     /**
@@ -9,13 +9,13 @@ export default class NotFoundException extends BaseException {
      *
      * @param message - The error message,  if empty uses `Not found`
      * @param input - The input that was not found
-     * @param stack - Custom stack trace
+     * @param cause - The original error
      */
     constructor(
         message?: string ,
         public input?: any,
-        stack?: string
+        cause?: Error
     ) {
-        super(message || 'Not found', null, stack);
+        super(message || 'Not found', { cause }, cause?.stack);
     }
 }
