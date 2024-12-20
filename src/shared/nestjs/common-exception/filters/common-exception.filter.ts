@@ -30,6 +30,6 @@ export class CommonExceptionFilter implements ExceptionFilter {
         }
 
         response.status(statusCode)
-        response.send(ErrorResponse);
+        response.send(ErrorResponse as unknown as HttpException);
     }
 }
