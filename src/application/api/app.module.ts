@@ -2,15 +2,17 @@ import { Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 
+import * as moduleUtil from '../../shared/nestjs/utils/module.util';
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
-import { ExampleModule } from './example/example.module';
+import { SharedInfrastructureModule } from './shared-infrastructure.module';
+import  * as APIModules from './api-modules.export';
 import configuration from './configuration';
-import { MongooseModule } from '@nestjs/mongoose';
 
 
 /**
@@ -35,7 +37,8 @@ import { MongooseModule } from '@nestjs/mongoose';
         LoggerModule,
         HttpResponseModule,
         HealthModule,
-        ExampleModule,
+        SharedInfrastructureModule,
+        ...moduleUtil.toFlattenArray(APIModules),
     ],
     providers: [
         {
