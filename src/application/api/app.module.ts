@@ -9,6 +9,7 @@ import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
+import { SharedInfrastructureModule } from './shared-infrastructure.module';
 import  * as APIModules from './api-modules.export';
 import configuration from './configuration';
 
@@ -28,6 +29,7 @@ import configuration from './configuration';
         LoggerModule,
         HttpResponseModule,
         HealthModule,
+        SharedInfrastructureModule,
         ...moduleUtil.toFlattenArray(APIModules),
     ],
     providers: [
