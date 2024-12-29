@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 
 export class Example {
-    _id: string;
+    id: string;
 
     @IsNotEmpty()
     name: string;
