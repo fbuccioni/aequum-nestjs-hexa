@@ -9,7 +9,7 @@ import {
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
 
 @Injectable()
-export class ExampleService {
+export class ExamplesService {
     constructor(private readonly exampleRepository: ExampleRepository) {}
 
     async get(id: string): Promise<ExampleDto> {

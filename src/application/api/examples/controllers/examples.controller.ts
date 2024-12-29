@@ -13,14 +13,14 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../../../dtos';
 import { Example } from '../../../../domain/models/example.model';
-import { ExampleService } from '../../../services/example.service';
+import { ExamplesService } from '../../../services/examples.service';
 import { ParseObjectIdPipe } from 'src/shared/common/pipes/object-id.pipe';
 
 
 @ApiTags('Example')
 @Controller('examples')
-export class ExampleController {
-    constructor(private readonly exampleService: ExampleService) {}
+export class ExamplesController {
+    constructor(private readonly exampleService: ExamplesService) {}
 
     @Post()
     @ApiOperation({ summary: 'Create a new example' })
