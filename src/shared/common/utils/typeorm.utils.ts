@@ -41,7 +41,7 @@ export function URIToDataSourceOptions(uri: string):  DataSourceOptions {
 export function isDuplicateError(err: any) {
     return (
         err instanceof TypeORMError
-        && err.message.match(/(duplicate|unique)/)
+        && err.message.match(/(duplicate|unique (key|constraint)|primary key|E11000)/i)
     )
 }
 
