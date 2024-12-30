@@ -7,7 +7,7 @@ import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
 
 
 @Injectable()
-export class ExampleService {
+export class ExamplesService {
     constructor(
         @InjectRepository(Example)
         private readonly exampleRepository: ExampleRepository

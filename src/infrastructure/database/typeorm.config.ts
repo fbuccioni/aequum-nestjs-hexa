@@ -3,7 +3,7 @@ import { EntitySchema } from 'typeorm';
 import * as env from '../../shared/common/utils/env.utils';
 import { URIToDataSourceOptions } from '../../shared/common/utils/typeorm.utils';
 
-import * as moduleUtils from '../../shared/nestjs/utils/module.util';
+import * as moduleUtils from '../../shared/nestjs/common/utils/module.util';
 
 import * as Entities from './entities';
 
