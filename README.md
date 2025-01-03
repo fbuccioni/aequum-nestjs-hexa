@@ -45,8 +45,17 @@ DDD and some other design patterns to make the code more readable,
 This boilerplate includes:
 
 - Mongoose (in `mongoose` branch)
+  - Pre build tools for virtual `id` field instead of `_id` 
 - TypeORM (in `typeorm` branch)
+  - URI type connection string 
+  - Preconfigured migrations
+  - Simple migration commands on `npm run`
 - OpenAPI (Swagger) docs
+- Built in CRUDL operations to fasten the development
+  - CRUDL service
+    - Mongoose
+    - TypeORM
+  - CRUDL controller with OpenAPI specs
 - Docker
 
 ---
@@ -130,7 +139,7 @@ By default the only infrastructure is the `database`.
 Directory structure:
 
 | Directory               | Description
--------------------------|----------------------------------
+--------------------------|----------------------------------
 | `database`              | Database infrastructure
 | `database/repositories` | Repositories
 | `database/entities`     | Entities (schemas, models, interfaces, etc.)
