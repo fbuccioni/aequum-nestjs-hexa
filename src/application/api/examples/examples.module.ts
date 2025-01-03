@@ -5,13 +5,13 @@ import { Example } from '../../../infrastructure/database/entities/example.entit
 
 import { ExamplesService } from '../../services/examples.service';
 
-import { ExampleController } from './controllers/example.controller';
+import { ExamplesController } from './controllers/examples.controller';
 
 
 @Module({
     imports: [ TypeOrmModule.forFeature([ Example ]) ],
     providers: [ ExamplesService ],
-    controllers: [ ExampleController ],
+    controllers: [ ExamplesController ],
     exports: [ ExamplesService ],
 })
 export class ExampleModule {}
