@@ -9,8 +9,8 @@ import { readFileSync } from 'node:fs';
  */
 export default () => {
     const [ host, port ] = [
-        process.env.APP_LISTEN_HOST || 'localhost',
-        ( +process.env.APP_LISTEN_PORT ) || 8085
+        process.env.API_LISTEN_HOST || 'localhost',
+        ( +process.env.API_LISTEN_PORT ) || 8085
     ];
     const { name, title, version, description }: any = JSON.parse(
         readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
