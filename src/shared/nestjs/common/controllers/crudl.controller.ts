@@ -7,6 +7,15 @@ import { ClassConstructor } from '../../../common/types/class-constructor.type';
 import { capitalize as cap } from '../../../common/utils/string.util';
 
 
+const CRUDLMethods = [ 'create', 'retrieve', 'update', 'delete', 'list' ] as const;
+
+type CRUDLMappedMethods<T = any> =  {
+    [ K in typeof CRUDLMethods[number] ]: T
+};
+
+type CRUDLMappedMethodsWithAll<T = any> = CRUDLMappedMethods<T> & { '*': T };
+
+
 /**
  * CRUDLController options
  */
@@ -26,10 +35,25 @@ type CRUDLControllerOptions = {
         /** Pipe to be used to validate the ID */
         validationPipe: ClassConstructor<PipeTransform>
     };
+
     /** Forbid actions */
     forbid?: {
         /** Forbid the deletion */
         delete?: boolean
+    }
+
+    /** auth */
+    auth?: string | string[],
+
+    /** Apply decorators on methods, '*' will apply to all methods */
+    applyDecorators?: Partial<CRUDLMappedMethodsWithAll<MethodDecorator[]>>
+
+    /**
+     * Transformation of the entity cases
+     */
+    transform?: {
+        body?: { input?: (data: any) => any },
+        id?: { input?: (data: any) => any },
     }
 }
 
@@ -105,6 +129,8 @@ export function CRUDLController<
         @Post()
         @HttpCode(201)
         async create(@Body() body: ModelCreateDtoRealType): Promise<ModelDtoRealType> {
+            if (options.transform?.body?.input) options.transform.body.input(body);
+
             return this.service.create(body);
         }
 
@@ -158,6 +184,7 @@ export function CRUDLController<
         async retrieve(
             @Param('id', options.id.validationPipe) id: ModelDtoRealType['id']
         ): Promise<ModelDtoRealType> {
+            if (options.transform?.id?.input) options.transform.id.input(id);
             return this.service.retrieve(id);
         }
 
@@ -189,6 +216,8 @@ export function CRUDLController<
             @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
             @Body() body: ModelUpdateDtoRealType
         ): Promise<ModelDtoRealType> {
+            if (options.transform?.id?.input) options.transform.id.input(id);
+            if (options.transform?.body?.input) options.transform.body.input(body);
             return this.service.update(id, body);
         }
 
@@ -227,12 +256,64 @@ export function CRUDLController<
             if (options.forbid?.delete)
                 throw new ForbiddenException(`Deleting ${options.name.singular} is forbidden.`);
 
+            if (options.transform?.id?.input) options.transform.id.input(id);
             return this.service.delete(id);
         }
     }
 
+    // Apply openapi auth decorators asynchronously
+    if (options.auth && options.auth.length) {
+        const authDecoNames: Array<string> = (
+            Array.isArray(options.auth) ? options.auth : [ options.auth ]
+        )
+            .map((dn) => {
+                if (dn === 'jwt') dn = 'Bearer';
+                if (dn === 'oauth2') dn = 'OAuth2';
+                else dn = dn[0].toUpperCase() + dn.slice(1);
+                return `Api${dn}Auth`;
+            });
+
+        (async () => {
+            const nestJSSwaggerModule = await import('@nestjs/swagger');
+            for (const authDecoName of authDecoNames) {
+                if (!nestJSSwaggerModule[authDecoName])
+                    throw new Error(`The auth decorator '${ authDecoName }' is not available in '@nestjs/swagger'`);
+
+                for (const method of CRUDLMethods)
+                    nestJSSwaggerModule[authDecoName]()(
+                        CRUDLController.prototype,
+                        method,
+                        Object.getOwnPropertyDescriptor(CRUDLController.prototype, method)
+                    );
+            }
+        })();
+    }
+
+    // Apply decorators
+    if (options.applyDecorators) {
+        const methods = (
+            ( '*' in options.applyDecorators )
+                ? CRUDLMethods
+                : Object.keys(options.applyDecorators)
+        );
+
+        for (const method of methods) {
+            const decorators = [
+                ...( options.applyDecorators['*'] || [] ),
+                ...( options.applyDecorators[method] || [] )
+            ]
+
+            for (const decorator of decorators)
+                decorator(
+                    CRUDLController.prototype,
+                    method,
+                    Object.getOwnPropertyDescriptor(CRUDLController.prototype, method)
+                );
+        }
+    }
+
     // Workaround to fix the issues with the metadata
-    type KeyDataTuple = [ string, any[] ];
+    type KeyDataTuple = [ string,  any[] ];
     const idType = (
         options.id.type === 'string' ? String :
         options.id.type === 'number' ? Number :
