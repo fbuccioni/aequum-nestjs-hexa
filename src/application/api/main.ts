@@ -1,5 +1,5 @@
 import morgan from 'morgan';
-import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 import { CommonExceptionFilter } from '../../shared/nestjs/common-exception/filters/common-exception.filter';
+import { swaggerAuthModName } from '../../shared/nestjs/authn/utils/authn.util';
 
 
 async function bootstrap() {
@@ -31,14 +32,19 @@ async function bootstrap() {
         app.useGlobalFilters(new CommonExceptionFilter())
 
         // OpenAPI
-        const config = new DocumentBuilder()
+        const docBuilder = new DocumentBuilder()
             .setTitle(configService.get<string>('app.title'))
             .setDescription(configService.get<string>('app.description'))
             .setVersion(configService.get<string>('app.version'))
-            .build();
 
+        // Simple OpenAPI auth module add
+        const openAPIAuthMod = configService.get<string>('auth.swagger');
+        if (openAPIAuthMod)
+            docBuilder[`add${swaggerAuthModName(openAPIAuthMod)}Auth`]();
+
+        const config = docBuilder.build()
         const document = SwaggerModule.createDocument(app, config);
-        SwaggerModule.setup(`${pathPrefix}/spec`    , app, document);
+        SwaggerModule.setup(`${pathPrefix}/spec`, app, document);
 
         let [ port, host ] = [
             configService.get<number>('app.port'),

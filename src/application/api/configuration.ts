@@ -9,8 +9,8 @@ import { readFileSync } from 'node:fs';
  */
 export default () => {
     const [ host, port ] = [
-        process.env.APP_LISTEN_HOST || 'localhost',
-        ( +process.env.APP_LISTEN_PORT ) || 8085
+        process.env.API_LISTEN_HOST || 'localhost',
+        ( +process.env.API_LISTEN_PORT ) || 8085
     ];
     const { name, title, version, description }: any = JSON.parse(
         readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
@@ -29,5 +29,16 @@ export default () => {
         api: {
             version: process.env.API_VERSION,
         },
+        /* Uncomment this block to enable JWT/Auth configuration *
+        auth: {
+            password: {
+                saltRounds: (+process.env.AUTH_PASSWORD_SALT_ROUNDS) || 10,
+            },
+            jwt: {
+                secret: process.env.AUTH_JWT_SECRET || 'secret',
+                expiresAfter: (+process.env.AUTH_JWT_EXPIRES_AFTER_SECS) || 3600,
+            }
+        }
+        /* */
     };
 };
