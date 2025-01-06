@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
@@ -13,7 +13,9 @@ import { HealthModule } from '../../shared/nestjs/health/health.module';
 import { SharedInfrastructureModule } from './shared-infrastructure.module';
 import  * as APIModules from './api-modules.export';
 import configuration from './configuration';
+
 import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
+import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
 
 
 /**
@@ -41,6 +43,12 @@ import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
         ...moduleUtil.toFlattenArray(APIModules) as DynamicModule[],
     ],
     providers: [
+        /* Uncomment this block to enable JWT guard *
+        {
+            provide: APP_GUARD,
+            useClass: JwtGuard,
+        },
+        /* */
         {
             provide: APP_INTERCEPTOR,
             useClass: CacheInterceptor,
