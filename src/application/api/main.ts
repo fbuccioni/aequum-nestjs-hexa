@@ -1,5 +1,5 @@
 import morgan from 'morgan';
-import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -31,14 +31,14 @@ async function bootstrap() {
         app.useGlobalFilters(new CommonExceptionFilter())
 
         // OpenAPI
-        const config = new DocumentBuilder()
+        const docBuilder = new DocumentBuilder()
             .setTitle(configService.get<string>('app.title'))
             .setDescription(configService.get<string>('app.description'))
             .setVersion(configService.get<string>('app.version'))
-            .build();
-
+        
+        const config = docBuilder.build()
         const document = SwaggerModule.createDocument(app, config);
-        SwaggerModule.setup(`${pathPrefix}/spec`    , app, document);
+        SwaggerModule.setup(`${pathPrefix}/spec`, app, document);
 
         let [ port, host ] = [
             configService.get<number>('app.port'),
