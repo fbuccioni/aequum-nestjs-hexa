@@ -5,6 +5,7 @@ import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { BaseCRUDLService } from "../../../common/services/base-crudl.service";
 import { ClassConstructor } from '../../../common/types/class-constructor.type';
 import { capitalize as cap } from '../../../common/utils/string.util';
+import { swaggerAuthModName } from '../../authn/utils/authn.util';
 
 
 const CRUDLMethods = [ 'create', 'retrieve', 'update', 'delete', 'list' ] as const;
@@ -266,12 +267,7 @@ export function CRUDLController<
         const authDecoNames: Array<string> = (
             Array.isArray(options.auth) ? options.auth : [ options.auth ]
         )
-            .map((dn) => {
-                if (dn === 'jwt') dn = 'Bearer';
-                if (dn === 'oauth2') dn = 'OAuth2';
-                else dn = dn[0].toUpperCase() + dn.slice(1);
-                return `Api${dn}Auth`;
-            });
+            .map((dn) => `Api${swaggerAuthModName(dn)}Auth`);
 
         (async () => {
             const nestJSSwaggerModule = await import('@nestjs/swagger');
