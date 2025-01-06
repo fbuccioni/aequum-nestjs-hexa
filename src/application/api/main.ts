@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { AppModule } from './app.module';
 import { CommonExceptionFilter } from '../../shared/nestjs/common-exception/filters/common-exception.filter';
+import { swaggerAuthModName } from '../../shared/nestjs/authn/utils/authn.util';
 
 
 async function bootstrap() {
@@ -35,7 +36,12 @@ async function bootstrap() {
             .setTitle(configService.get<string>('app.title'))
             .setDescription(configService.get<string>('app.description'))
             .setVersion(configService.get<string>('app.version'))
-        
+
+        // Simple OpenAPI auth module add
+        const openAPIAuthMod = configService.get<string>('auth.swagger');
+        if (openAPIAuthMod)
+            docBuilder[`add${swaggerAuthModName(openAPIAuthMod)}Auth`]();
+
         const config = docBuilder.build()
         const document = SwaggerModule.createDocument(app, config);
         SwaggerModule.setup(`${pathPrefix}/spec`, app, document);

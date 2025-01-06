@@ -29,5 +29,16 @@ export default () => {
         api: {
             version: process.env.API_VERSION,
         },
+        /* Uncomment this block to enable JWT/Auth configuration *
+        auth: {
+            password: {
+                saltRounds: (+process.env.AUTH_PASSWORD_SALT_ROUNDS) || 10,
+            },
+            jwt: {
+                secret: process.env.AUTH_JWT_SECRET || 'secret',
+                expiresAfter: (+process.env.AUTH_JWT_EXPIRES_AFTER_SECS) || 3600,
+            }
+        }
+        /* */
     };
 };
