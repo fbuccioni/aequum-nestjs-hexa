@@ -30,6 +30,7 @@ export default () => {
         },
         /* Uncomment this block to enable JWT/Auth configuration *
         auth: {
+            swagger: process.env.AUTH_SWAGGER || null,
             password: {
                 saltRounds: (+process.env.AUTH_PASSWORD_SALT_ROUNDS) || 10,
             },
