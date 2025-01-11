@@ -48,6 +48,12 @@ export default () => {
                     refreshToken: process.env.AUTH_USER_FIELD_REFRESH_TOKEN,
                 }
             }
+        },
+        authorization: {
+            // See the RBACGuard class for more information
+            rolesUserProperty: process.env.AUTHORIZATION_ROLES_USER_PROPERTY,
+            defaultPolicy: process.env.AUTHORIZATION_DEFAULT_POLICY,
+            whenNoUser: process.env.AUTHORIZATION_WHEN_NO_USER,
         }
     };
 };
