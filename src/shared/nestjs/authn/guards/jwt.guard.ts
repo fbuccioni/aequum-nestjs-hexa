@@ -3,12 +3,9 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
-import {
-    publicControllerMetaKey,
-    publicControllerEndpointMetaKey,
-    unpublicControllerMetaKey,
-    unpublicControllerEndpointMetaKey
-} from "../constants";
+import { authnPublicMetaKey, authnRequiredMetaKey, } from "../constants/metadata.constants";
+import { TokenExpiredException } from "../exceptions/token-expired.exception";
+import { AuthenticationFailException } from "../exceptions/authentication-fail.exception";
 
 
 /**
@@ -21,31 +18,31 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         super();
     }
 
-    endpointIsUnpublic(endpointMethodHandler: Function, controllerClass: any) {
+    endpointRequiresAuth(endpointMethodHandler: Function, controllerClass: any) {
         return (
-            (!!this.reflector.getAllAndOverride(unpublicControllerMetaKey, [ controllerClass ]))
+            (!!this.reflector.getAllAndOverride(authnRequiredMetaKey, [ controllerClass ]))
             || (!!this.reflector.getAllAndOverride(
-                unpublicControllerEndpointMetaKey, [ endpointMethodHandler, controllerClass ]
+                authnRequiredMetaKey, [ endpointMethodHandler, controllerClass ]
             ))
         )
     }
 
     controllerIsPublic(controllerClass: any) {
-        return !!this.reflector.getAllAndOverride(publicControllerMetaKey, [ controllerClass ]);
+        return !!this.reflector.getAllAndOverride(authnPublicMetaKey, [ controllerClass ]);
     }
 
     endpointIsPublic(endpointMethodHandler: Function, controllerClass: any) {
         return (
             this.controllerIsPublic(controllerClass) || (
                 !!this.reflector.getAllAndOverride(
-                    publicControllerEndpointMetaKey, [ endpointMethodHandler, controllerClass ]
+                    authnPublicMetaKey, [ endpointMethodHandler, controllerClass ]
                 )
             )
         )
     }
 
     contextIsPublic(context: ExecutionContext): boolean {
-        if (this.endpointIsUnpublic(context.getHandler(), context.getClass()))
+        if (this.endpointRequiresAuth(context.getHandler(), context.getClass()))
             return false;
 
         const classWithParents = (c): any[] => {
