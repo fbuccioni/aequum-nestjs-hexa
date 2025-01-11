@@ -1,11 +1,12 @@
 export class BaseException extends Error {
     static code = null;
+
     readonly code = undefined;
 
     constructor(message: string, options?: Record<string, any>, stack?: string) {
         super(message, options);
 
-        let self = this.constructor as typeof BaseException;
+        const self = this.constructor as typeof BaseException;
 
         this.name = self.name;
         if (self.code) this.code = self.code;
@@ -17,7 +18,7 @@ export class BaseException extends Error {
             configurable: false,
         });
 
-        for (let prop in [ 'code', 'name' ]) {
+        for (const prop in [ 'code', 'name' ]) {
             Object.defineProperty(this, prop, enumPropDesc(false));
         }
 
