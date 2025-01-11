@@ -10,16 +10,12 @@ import { UsersService } from "./users.service";
 
 @Injectable()
 export class AuthService extends AuthnService<UserDto> {
-    static fields = AuthnService.extendFields(
-        { username: 'email' }
-    );
-
     constructor(
         protected usersService: UsersService,
         protected jwtService: JwtService,
         protected configService: ConfigService
     ) {
-        super();
+        super(configService);
     }
 }
 /* */
