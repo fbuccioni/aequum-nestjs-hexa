@@ -1,62 +1,11 @@
 import { PARAMTYPES_METADATA } from "@nestjs/common/constants";
-import { Body, Delete, ForbiddenException, Get, HttpCode, Param, Patch, PipeTransform, Post } from "@nestjs/common";
+import { Body, Delete, ForbiddenException, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 import { BaseCRUDLService } from "../../../common/services/base-crudl.service";
-import { ClassConstructor } from '../../../common/types/class-constructor.type';
 import { capitalize as cap } from '../../../common/utils/string.util';
 import { swaggerAuthModName } from '../../authn/utils/authn.util';
-
-
-const CRUDLMethods = [ 'create', 'retrieve', 'update', 'delete', 'list' ] as const;
-
-type CRUDLMappedMethods<T = any> =  {
-    [ K in typeof CRUDLMethods[number] ]: T
-};
-
-type CRUDLMappedMethodsWithAll<T = any> = CRUDLMappedMethods<T> & { '*': T };
-
-
-/**
- * CRUDLController options
- */
-type CRUDLControllerOptions = {
-    /** Information about the name of the  entity */
-    name: {
-        /** Singular name of the entity */
-        singular: string,
-        /** Plural name of the entity */
-        plural: string,
-    };
-
-    /** Options related to the ID of the entity */
-    id: {
-        /** Type of the ID this can be a class/constructor */
-        type: 'string' | 'number' | ClassConstructor<any>,
-        /** Pipe to be used to validate the ID */
-        validationPipe: ClassConstructor<PipeTransform>
-    };
-
-    /** Forbid actions */
-    forbid?: {
-        /** Forbid the deletion */
-        delete?: boolean
-    }
-
-    /** auth */
-    auth?: string | string[],
-
-    /** Apply decorators on methods, '*' will apply to all methods */
-    applyDecorators?: Partial<CRUDLMappedMethodsWithAll<MethodDecorator[]>>
-
-    /**
-     * Transformation of the entity cases
-     */
-    transform?: {
-        body?: { input?: (data: any) => any },
-        id?: { input?: (data: any) => any },
-    }
-}
+import { CRUDLControllerOptions, CRUDLMethods } from "../types/crudl.types";
 
 
 /**
