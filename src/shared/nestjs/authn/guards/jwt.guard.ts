@@ -18,6 +18,13 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         super();
     }
 
+    /**
+     * Whether the endpoint requires authentication.
+     *
+     * @param endpointMethodHandler
+     * @param controllerClass
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     endpointRequiresAuth(endpointMethodHandler: Function, controllerClass: any) {
         return (
             (!!this.reflector.getAllAndOverride(authnRequiredMetaKey, [ controllerClass ]))
@@ -27,10 +34,21 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         )
     }
 
+    /**
+     * Wherer the controller is public (no authentication required).
+     *
+     * @param controllerClass - Class of the controller.
+     */
     controllerIsPublic(controllerClass: any) {
         return !!this.reflector.getAllAndOverride(authnPublicMetaKey, [ controllerClass ]);
     }
 
+    /**
+     * Whether the endpoint is public (no authentication required).
+     *
+     * @param endpointMethodHandler - Method handler of the endpoint.
+     * @param controllerClass - Class of the controller.
+     */
     endpointIsPublic(endpointMethodHandler: Function, controllerClass: any) {
         return (
             this.controllerIsPublic(controllerClass) || (
@@ -41,6 +59,11 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         )
     }
 
+    /**
+     * Whether the context of the endpoint is public (no authentication required).
+     *
+     * @param context - Endpoint excution context.
+     */
     contextIsPublic(context: ExecutionContext): boolean {
         if (this.endpointRequiresAuth(context.getHandler(), context.getClass()))
             return false;
