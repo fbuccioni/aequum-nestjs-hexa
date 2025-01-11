@@ -84,4 +84,40 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         if (this.contextIsPublic(context)) return true;
         return super.canActivate(context);
     }
+
+    /**
+     * Handle the request, this is just to catch errors on authentication
+     *
+     * @throws AuthenticationFailException on any fail
+     * @throws TokenExpiredException on token expired
+     *
+     * @param err - Error
+     * @param user - Request user object
+     * @param info - Info (this can be an exception too)
+     * @param context - Execution context for endpoint
+     *
+     * @see {@link https://docs.nestjs.com/recipes/passport#extending-guards}
+     */
+    handleRequest<TUser = any>(err, user, info, context): TUser {
+        if (err || !user) {
+            const token = context
+                .switchToHttp()
+                .getRequest()
+                .headers?.authorization?.replace(/^.*?[ ]/, '')
+            ;
+
+            if (info.name === 'TokenExpiredError')
+                throw new TokenExpiredException(
+                    { method: 'jwt', expiredAt: info.expiredAt,  token },
+                    info
+                )
+
+            throw err || new AuthenticationFailException(
+                (typeof info === 'string' ? info : undefined),
+                { method: 'jwt', token },
+                (err instanceof Error) ? err : (info instanceof Error) ? info : undefined
+            );
+        }
+        return user;
+    }
 }
