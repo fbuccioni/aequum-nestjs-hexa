@@ -38,7 +38,7 @@ async function bootstrap() {
             .setVersion(configService.get<string>('app.version'))
 
         // Simple OpenAPI auth module add
-        const openAPIAuthMod = configService.get<string>('auth.swagger');
+        const openAPIAuthMod = configService.get<string>('authentication.swagger');
         if (openAPIAuthMod)
             docBuilder[`add${swaggerAuthModName(openAPIAuthMod)}Auth`]();
 

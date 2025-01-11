@@ -26,22 +26,48 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     /**
      * The JWT service from nestjs
      */
-    protected jwtService: JwtService
+    protected jwtService: JwtService;
 
 
     /**
-     * The config service from nestjs
-     */
-    protected configService: ConfigService;
-
-    /**
-     * Fields map for `User` DTO
+     * Default fields map for `User` DTO
      */
     static fields = {
         username: 'username',
         password: 'password',
         id: 'id',
         refreshToken: 'refreshToken'
+    }
+
+    /**
+     * Fields map for `User` DTO
+     */
+    protected fields: { [k: string]: string };
+
+    constructor(
+        /**
+         * The config service from nestjs
+         */
+        protected configService: ConfigService
+    ) {
+        const self = this.constructor as typeof AuthnService;
+
+        const disableRefreshToken = this.configService
+            .get<boolean>('authentication.disableRefreshToken');
+        if (typeof(disableRefreshToken) !== 'undefined' && disableRefreshToken !== null)
+            self.refreshToken = !disableRefreshToken;
+
+        let userFields = this.configService
+            .get<Record<string, string>>('authentication.user.fields');
+
+        if ((!userFields) && !this.fields)
+            this.fields = self.fields;
+        else {
+            if (!this.fields) this.fields = {};
+            for (const field in self.fields)
+                if (!this.fields[field])
+                    this.fields[field] = userFields[field] || self.fields[field];
+        }
     }
 
     /**
@@ -56,7 +82,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @ignore
      */
     addExpireDate(date: Date): Date {
-        const expiresAfter = this.configService.get<number>('auth.jwt.expiresAfter');
+        const expiresAfter = this.configService.get<number>('authentication.jwt.expiresAfter');
         return new Date(date.valueOf() + (expiresAfter * 1000));
     }
 
@@ -68,7 +94,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     async generatePayload(user: User, issueDate: Date): Promise<JSON> {
         const self = this.constructor as typeof AuthnService
         return {
-            sub: user[self.fields.id],
+            sub: user[this.fields.id],
             exp: this.addExpireDate(issueDate).getTime() / 1000
         }
     }
@@ -92,8 +118,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param password
      */
     async login(username: string, password: string): Promise<User> {
-        const self = this.constructor as typeof AuthnService;
-        const usernameData = { [self.fields.username]: username };
+        const usernameData = { [this.fields.username]: username };
         const inputData = { ...usernameData, password }
 
         let user: User;
@@ -104,8 +129,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
                 throw error
         }
         if (!user) throw this.generateException(inputData);
-
-        const isMatch: boolean = bcrypt.compareSync(password, user[self.fields.password]);
+        const isMatch: boolean = bcrypt.compareSync(password, user[this.fields.password]);
         if(!isMatch) throw this.generateException(inputData);
 
         return user;
@@ -126,7 +150,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         } as TokenDTO;
 
         if (self.refreshToken) {
-            data.refreshToken = await this.jwtService.sign({ sub: user[self.fields.id] });
+            data.refreshToken = await this.jwtService.sign({ sub: user[this.fields.id] });
             this.storeRefreshToken(user, data.refreshToken);
         }
 
@@ -139,9 +163,8 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param token
      */
     async refreshToken(token: string) {
-        const self = this.constructor as typeof AuthnService;
         const user = await this.usersService.retrieveBy({
-            [self.fields.refreshToken]: token
+            [this.fields.refreshToken]: token
         });
 
         if (!user) throw new NotFoundException("Invalid token");
@@ -157,10 +180,8 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param token
      */
     async storeRefreshToken(user: User, token: string) {
-        const self = this.constructor as typeof AuthnService;
-
         this.usersService.update(
-            user[self.fields.id], { refreshToken: token }
+            user[this.fields.id], { refreshToken: token }
         )
     }
 
@@ -169,7 +190,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param password
      */
     async hashPassword(password: string): Promise<string> {
-        const rounds = this.configService.get<number>('auth.password.saltRounds');
+        const rounds = this.configService.get<number>('authentication.password.saltRounds') || 10;
         const salt = await bcrypt.genSalt(rounds);
         return bcrypt.hash(password, salt);
     }
@@ -179,7 +200,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param password
      */
     static hashPassword(password: string): Promise<string> {
-        const rounds = (configuration() as any).auth.password.saltRounds;
+        const rounds = (configuration() as any).authentication?.password?.saltRounds || 10;
         const salt = bcrypt.genSaltSync(rounds);
         return bcrypt.hashSync(password, salt);
     }
