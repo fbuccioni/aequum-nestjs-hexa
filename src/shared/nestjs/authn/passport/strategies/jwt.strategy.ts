@@ -19,7 +19,7 @@ export abstract class JwtStrategy<UserDto, JwtPayload extends Record<string, any
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: configService.get<string>('auth.jwt.secret'),
+            secretOrKey: configService.get<string>('authentication.jwt.secret'),
         });
     }
 
