@@ -5,11 +5,15 @@ import { BaseCRUDLService } from "./base-crudl.service";
 
 
 export abstract class BaseCRUDLMongooseService<
-    SchemaModel extends { id: unknown },
+    SchemaModel extends { [key in PrimaryKeyField]: any },
     SchemaModelDto,
     SchemaModelCreateDto,
-    SchemaModelUpdateDto
+    SchemaModelUpdateDto,
+    QueryFilter extends any = any,
+    PrimaryKeyField extends string = 'id',
 > extends BaseCRUDLService implements BaseCRUDLService {
+    protected primaryKeyField: string = '_id';
+
     static uniqueFields: string[];
     static duplicatedEntryMessage?: string;
 
@@ -20,7 +24,7 @@ export abstract class BaseCRUDLMongooseService<
             return self.duplicatedEntryMessage;
 
         if (this.uniqueFields && this.uniqueFields?.length)
-            return `\`${self.uniqueFields.join('` or ')}\` already exists`;
+            return `\`${ self.uniqueFields.join('` or ') }\` already exists`;
 
         return 'Duplicated entry';
     }
@@ -39,16 +43,29 @@ export abstract class BaseCRUDLMongooseService<
         }
     }
 
-    async retrieve(id: SchemaModel['id']): Promise<SchemaModelDto> {
+    async retrieve(id: SchemaModel[PrimaryKeyField]): Promise<SchemaModelDto> {
         return this.repository.getOneById(id) as SchemaModelDto;
     }
 
-    async update(id: SchemaModel['id'], data: SchemaModelUpdateDto): Promise<SchemaModelDto> {
+    async retrieveBy(filter: QueryFilter): Promise<SchemaModelDto> {
+        return this.repository.getOne(filter) as SchemaModelDto;
+    }
+
+    async update(id: SchemaModel[PrimaryKeyField], data: SchemaModelUpdateDto): Promise<SchemaModelDto> {
+        return this.updateBy(
+            { [ this.primaryKeyField ]: id } as QueryFilter,
+            data
+        );
+    }
+
+    async updateBy(filter: QueryFilter, data: SchemaModelUpdateDto): Promise<SchemaModelDto> {
         const self = this.constructor as typeof BaseCRUDLMongooseService;
 
         try {
-            await this.repository.update({ _id: id }, data);
-            return this.retrieve(id) as unknown as SchemaModelDto;
+            await this.repository.update(filter, data);
+            const k = await this.retrieveBy(filter) as unknown as SchemaModelDto;
+            console.log(k, filter);
+            return k;
         } catch (err) {
             throw duplicateEntryExceptionOrError(
                 err, self.duplicateEntryExceptionMessage(), data, self.uniqueFields || []
@@ -56,8 +73,12 @@ export abstract class BaseCRUDLMongooseService<
         }
     }
 
-    async delete(id: SchemaModel['id']): Promise<void> {
-        return this.repository.delete({ _id: id });
+    async delete(id: SchemaModel[PrimaryKeyField]): Promise<void> {
+        return this.deleteBy({ [ this.primaryKeyField ]: id } as QueryFilter);
+    }
+
+    async deleteBy(filter: QueryFilter): Promise<void> {
+        return this.repository.delete(filter);
     }
 
     async list(filter?: any): Promise<SchemaModelDto[]> {

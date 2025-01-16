@@ -9,8 +9,15 @@ import { BaseCRUDLMongooseService } from '../../shared/common/services/base-crud
 
 
 @Injectable()
-export class ExamplesService extends BaseCRUDLMongooseService<Example, ExampleDto, ExampleCreateDto, ExampleUpdateDto> {
+export class ExamplesService extends BaseCRUDLMongooseService<
+    Example,
+    ExampleDto,
+    ExampleCreateDto,
+    ExampleUpdateDto
+> {
     constructor(protected readonly repository: ExampleRepository) {
         super();
     }
 }
+
+
