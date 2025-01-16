@@ -64,8 +64,7 @@ export function AuthnController<
         async refreshToken(
             @Body() tokenData: TokenRefreshDtoRealType
         ): Promise<TokenDtoRealType> {
-            const user = await this.authService.refreshToken(tokenData.token);
-            return this.authService.tokenData(user) as TokenDtoRealType;
+            return this.authService.refreshToken(tokenData.refreshToken) as Promise<TokenDtoRealType>
         }
     }
 
