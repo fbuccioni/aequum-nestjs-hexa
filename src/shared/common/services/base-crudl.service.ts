@@ -2,7 +2,7 @@ export abstract class BaseCRUDLService {
     /**
      * The primary key field
      */
-    primaryKeyField: string = 'id';
+    protected primaryKeyField: any = 'id';
 
     /**
      * Create a new data entry
