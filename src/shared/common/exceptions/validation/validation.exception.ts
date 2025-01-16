@@ -2,13 +2,20 @@ import { BaseException } from '../base.exception';
 
 import * as dataUtil from '../../utils/data.util';
 
-export type ValidationExceptionErrorDetail = [ code: string, message: string ]
-export type ValidationExceptionError = {
-    [key: string]: (
-        ValidationExceptionErrorDetail
-        | { [key: string]: ValidationExceptionError }
-    )
+export type ValidationExceptionErrorDetail = [
+    code: string,
+    message: string,
+    constraints?: any[],
+];
+
+export type ValidationExceptionErrorDetails = ValidationExceptionErrorDetail[];
+export type ValidationExceptionErrorObject = {
+    [key: string]: ValidationExceptionError
 }
+export type ValidationExceptionError = (
+    ValidationExceptionErrorDetails
+    | ValidationExceptionErrorObject
+)
 
 
 export class ValidationException extends BaseException {
