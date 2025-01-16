@@ -13,7 +13,7 @@ export class ExamplesService extends BaseCRUDLTypeORMService<
     ExampleCreateDto,
     ExampleUpdateDto,
     ExampleDto
-> {
+>{
     constructor(
         @InjectRepository(Example)
         protected readonly repository: ExampleRepository

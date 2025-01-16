@@ -1,14 +1,20 @@
 import { BaseCRUDLService } from "./base-crudl.service";
 import { TypeORMRepository } from '../repository/type-orm.repository';
 import { duplicateEntryExceptionOrError } from '../utils/typeorm.utils';
+import { FindOptionsWhere } from 'typeorm';
+import { generatePrime } from 'node:crypto';
 
 
 export abstract class BaseCRUDLTypeORMService<
-    EntityModel extends { id: string | number },
+    EntityModel extends { [key in PrimaryKeyField]: any },
     EntityModelDto,
     EntityModelCreateDto,
-    EntityModelUpdateDto
+    EntityModelUpdateDto,
+    QueryFilter = any,
+    PrimaryKeyField extends string = 'id'
 > extends BaseCRUDLService implements BaseCRUDLService {
+    protected primaryKeyField = 'id' as PrimaryKeyField;
+
     static uniqueFields: string[];
     static duplicatedEntryMessage?: string;
 
@@ -19,7 +25,7 @@ export abstract class BaseCRUDLTypeORMService<
             return self.duplicatedEntryMessage;
 
         if (this.uniqueFields && this.uniqueFields?.length)
-            return `\`${self.uniqueFields.join('` or ')}\` already exists`;
+            return `\`${ self.uniqueFields.join('` or ') }\` already exists`;
 
         return 'Duplicated entry';
     }
@@ -39,16 +45,29 @@ export abstract class BaseCRUDLTypeORMService<
         }
     }
 
-    async retrieve(id: EntityModel['id']): Promise<EntityModelDto> {
-        return this.repository.findOneBy({ id: id as any }) as unknown as Promise<EntityModelDto>;
+    async retrieve(id: EntityModel[PrimaryKeyField]): Promise<EntityModelDto> {
+        return this.retrieveBy({ [ this.primaryKeyField ]: id } as QueryFilter)
     }
 
-    async update(id: EntityModel['id'], data: EntityModelUpdateDto): Promise<EntityModelDto> {
+    async retrieveBy(filter: QueryFilter): Promise<EntityModelDto> {
+        return this.repository.findOneBy(
+            filter as FindOptionsWhere<EntityModel>
+        ) as unknown as Promise<EntityModelDto>;
+    }
+
+    async update(id: EntityModel[PrimaryKeyField], data: EntityModelUpdateDto): Promise<EntityModelDto> {
+        return this.updateBy(
+            { [ this.primaryKeyField ]: id } as QueryFilter,
+            data
+        );
+    }
+
+    async updateBy(filter: QueryFilter, data: EntityModelUpdateDto): Promise<EntityModelDto> {
         const self = this.constructor as typeof BaseCRUDLTypeORMService;
 
         try {
-            await this.repository.update(id, data as any);
-            return this.retrieve(id);
+            await this.repository.update(filter as FindOptionsWhere<EntityModel>, data as any);
+            return this.retrieveBy(filter);
         } catch (err) {
             throw duplicateEntryExceptionOrError(
                 err, self.duplicateEntryExceptionMessage(), data, self.uniqueFields || []
@@ -56,8 +75,14 @@ export abstract class BaseCRUDLTypeORMService<
         }
     }
 
-    async delete(id: EntityModel['id']): Promise<void> {
-        await this.repository.delete(id);
+    async delete(id: EntityModel[PrimaryKeyField]): Promise<void> {
+        await this.deleteBy(
+            { [ this.primaryKeyField ]: id } as QueryFilter
+        )
+    }
+
+    async deleteBy(filter: QueryFilter): Promise<void> {
+        await this.repository.delete(filter as FindOptionsWhere<EntityModel>);
     }
 
     async list(filter?: any): Promise<EntityModelDto[]> {
