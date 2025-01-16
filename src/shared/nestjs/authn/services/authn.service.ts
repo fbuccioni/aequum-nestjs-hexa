@@ -32,7 +32,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     /**
      * Default fields map for `User` DTO
      */
-    static fields = {
+    static fields: { [k: string]: string } = {
         username: 'username',
         password: 'password',
         id: 'id',
@@ -57,7 +57,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         if (typeof(disableRefreshToken) !== 'undefined' && disableRefreshToken !== null)
             self.refreshToken = !disableRefreshToken;
 
-        let userFields = this.configService
+        const userFields = this.configService
             .get<Record<string, string>>('authentication.user.fields');
 
         if ((!userFields) && !this.fields)
@@ -92,7 +92,6 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param user - User DTO
      */
     async generatePayload(user: User, issueDate: Date): Promise<JSON> {
-        const self = this.constructor as typeof AuthnService
         return {
             sub: user[this.fields.id],
             exp: this.addExpireDate(issueDate).getTime() / 1000
@@ -151,7 +150,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
 
         if (self.refreshToken) {
             data.refreshToken = await this.jwtService.sign({ sub: user[this.fields.id] });
-            this.storeRefreshToken(user, data.refreshToken);
+            await this.storeRefreshToken(user, data.refreshToken);
         }
 
         return data;
@@ -162,14 +161,21 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      *
      * @param token
      */
-    async refreshToken(token: string) {
-        const user = await this.usersService.retrieveBy({
-            [this.fields.refreshToken]: token
-        });
+    async refreshToken(refreshToken: string) {
+        try {
+            const user = await this.usersService.retrieveBy({
+                [this.fields.refreshToken]: refreshToken
+            });
 
-        if (!user) throw new NotFoundException("Invalid token");
+            return this.tokenData(user);
+        } catch(err) {
+            if (err instanceof NotFoundException)
+                throw new UnauthorizedException(
+                    'Invalid refresh token', refreshToken
+                );
 
-        return this.tokenData(user);
+            throw err;
+        }
     }
 
 
@@ -180,7 +186,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param token
      */
     async storeRefreshToken(user: User, token: string) {
-        this.usersService.update(
+        await this.usersService.update(
             user[this.fields.id], { refreshToken: token }
         )
     }
