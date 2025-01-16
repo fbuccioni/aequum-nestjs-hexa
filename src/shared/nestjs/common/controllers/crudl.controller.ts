@@ -1,5 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PARAMTYPES_METADATA } from "@nestjs/common/constants";
-import { Body, Delete, ForbiddenException, Get, HttpCode, Param, Patch, Post } from "@nestjs/common";
+import {
+    Body,
+    Delete,
+    ForbiddenException,
+    Get,
+    HttpCode,
+    Param,
+    Patch,
+    Post,
+    Req,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
 import { BaseCRUDLService } from "../../../common/services/base-crudl.service";
@@ -68,6 +79,7 @@ export function CRUDLController<
          * @decorator `@HttpCode(201)`
          *
          * @param body - DTO of the entity to be created.
+         * @param request - Request object.
          * @returns A promise of the created entity DTO.
          */
         @ApiOperation({ summary: `Create a new ${options.name.singular}` })
@@ -78,7 +90,11 @@ export function CRUDLController<
         })
         @Post()
         @HttpCode(201)
-        async create(@Body() body: ModelCreateDtoRealType): Promise<ModelDtoRealType> {
+        async create(
+            @Body() body: ModelCreateDtoRealType,
+            @Req() request: any,
+            ...args: any[]
+        ): Promise<ModelDtoRealType> {
             if (options.transform?.body?.input) options.transform.body.input(body);
 
             return this.service.create(body);
@@ -94,6 +110,7 @@ export function CRUDLController<
          *     type: [ ModelDto ],
          * })`
          * @decorator `@Get()`
+         * @param request - Request object.
          *
          * @returns A promise of the list of entity DTOs.
          */
@@ -104,7 +121,10 @@ export function CRUDLController<
             type: [ ModelDto ],
         })
         @Get()
-        async list(): Promise<ModelDtoRealType[]> {
+        async list(
+            @Req() request: any,
+            ...args: any[]
+        ): Promise<ModelDtoRealType[]> {
             return this.service.list();
         }
 
@@ -121,6 +141,7 @@ export function CRUDLController<
          * @decorator `@Get(':id')`
          *
          * @param id - ID of the entity to be retrieved.
+         * @param request - Request object.
          * @returns A promise of the retrieved entity DTO.
          */
         @ApiOperation({ summary: 'Get a user by ID' })
@@ -132,7 +153,9 @@ export function CRUDLController<
         @ApiResponseNotFound
         @Get(':id')
         async retrieve(
-            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id']
+            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Req() request: any,
+            ...args: any[]
         ): Promise<ModelDtoRealType> {
             if (options.transform?.id?.input) options.transform.id.input(id);
             return this.service.retrieve(id);
@@ -152,6 +175,7 @@ export function CRUDLController<
          *
          * @param id - ID of the entity to be updated.
          * @param body - DTO of the entity to be updated.
+         * @param request - Request object.
          * @returns A promise of the updated entity DTO.
          */
         @ApiOperation({ summary: 'Update a user by ID' })
@@ -164,7 +188,9 @@ export function CRUDLController<
         @Patch(':id')
         async update(
             @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
-            @Body() body: ModelUpdateDtoRealType
+            @Body() body: ModelUpdateDtoRealType,
+            @Req() request: any,
+            ...args: any[]
         ): Promise<ModelDtoRealType> {
             if (options.transform?.id?.input) options.transform.id.input(id);
             if (options.transform?.body?.input) options.transform.body.input(body);
@@ -188,6 +214,7 @@ export function CRUDLController<
          * @decorator `@HttpCode(204)`
          *
          * @param id - ID of the entity to be deleted.
+         * @param request - Request object.
          * @returns A promise of void.
          */
         @ApiOperation({ summary: `Delete a ${options.name.singular} by ID` })
@@ -202,7 +229,11 @@ export function CRUDLController<
         @ApiResponseNotFound
         @Delete(':id')
         @HttpCode(204)
-        async delete(@Param('id', options.id.validationPipe) id: ModelDtoRealType['id']): Promise<void> {
+        async delete(
+            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Req() request: any,
+            ...args: any[]
+        ): Promise<void> {
             if (options.forbid?.delete)
                 throw new ForbiddenException(`Deleting ${options.name.singular} is forbidden.`);
 
