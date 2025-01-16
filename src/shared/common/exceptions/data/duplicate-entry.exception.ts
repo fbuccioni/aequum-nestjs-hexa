@@ -26,12 +26,17 @@ export class DuplicateEntryException extends BaseException implements Validation
     }
 
     asValidationException() {
-        const errors = this.uniqueProperties.reduce(
-            (acc, prop) => ({
-                ...acc,
-                ...dataUtil.objectFromDotNotation(prop, acc, [ this.code, this.message ]),
-            }), {}
-        );
+        let errors;
+
+        if (Array.isArray(this.uniqueProperties) && this.uniqueProperties.length)
+            errors = this.uniqueProperties.reduce(
+                (acc, prop) => ({
+                    ...acc,
+                    ...dataUtil.objectFromDotNotation(prop, acc, [[ this.code, this.message ]]),
+                }), {}
+            );
+        else
+            errors = { '$input': [ this.code, this.message ] };
 
         return new ValidationException(errors);
     }
