@@ -1,10 +1,8 @@
 export abstract class BaseCRUDLService {
     /**
-     * Fields to be used in the CRUDL operations
+     * The primary key field
      */
-    fields: any = {
-        pk: 'id'
-    }
+    primaryKeyField: string = 'id';
 
     /**
      * Create a new data entry
