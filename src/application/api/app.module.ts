@@ -10,12 +10,14 @@ import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 
+// import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
+// import { RBACGuard } from "../../shared/nestjs/authz/guards/rbac.guard";
+
+import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
+
 import { SharedInfrastructureModule } from './shared-infrastructure.module';
 import  * as APIModules from './api-modules.export';
 import configuration from './configuration';
-
-import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
-import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
 
 
 /**
@@ -47,6 +49,12 @@ import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
         {
             provide: APP_GUARD,
             useClass: JwtGuard,
+        },
+        /* */
+        /* Uncomment this block to enable RBAC guard *
+        {
+            provide: APP_GUARD,
+            useClass: RBACGuard,
         },
         /* */
         {

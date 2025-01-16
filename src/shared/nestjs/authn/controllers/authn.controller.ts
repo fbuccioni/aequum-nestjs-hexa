@@ -2,11 +2,8 @@ import { PARAMTYPES_METADATA } from '@nestjs/common/constants';
 import { Body, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-import { PublicEndpoint } from '../decorators/public-endpoint.decorator';
-
 import { AuthnService } from '../services/authn.service';
-import { PublicController } from "../decorators/public-controller.decorator";
-import { NonPublicEndpoint } from "../decorators/non-public-endpoint.decorator";
+import { Public } from '../decorators';
 
 
 /**
@@ -43,7 +40,7 @@ export function AuthnController<
     type TokenDtoRealType = InstanceType<TokenDtoType>;
     type TokenRefreshDtoRealType = InstanceType<TokenRefreshDtoType>;
 
-    @PublicController()
+    @Public()
     class AuthnController {
         constructor(protected authService: AuthnService<any>) {}
 
@@ -67,8 +64,7 @@ export function AuthnController<
         async refreshToken(
             @Body() tokenData: TokenRefreshDtoRealType
         ): Promise<TokenDtoRealType> {
-            const user = await this.authService.refreshToken(tokenData.token);
-            return this.authService.tokenData(user) as TokenDtoRealType;
+            return this.authService.refreshToken(tokenData.refreshToken) as Promise<TokenDtoRealType>
         }
     }
 
