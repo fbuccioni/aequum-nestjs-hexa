@@ -3,9 +3,9 @@ import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 
 export class TokenRefreshDto {
-    @ApiProperty({ description: 'Token (refresh)'})
+    @ApiProperty({ description: 'Refresh token'})
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
-    token: string
+    refreshToken: string
 }
