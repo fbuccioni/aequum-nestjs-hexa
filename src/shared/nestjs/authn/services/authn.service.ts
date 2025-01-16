@@ -144,7 +144,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         const self = this.constructor as typeof AuthnService;
         const payload = await this.generatePayload(user, now);
         const data = {
-            token: await this.jwtService.sign(payload as any),
+            accessToken: await this.jwtService.sign(payload as any),
             expiresAt: this.addExpireDate(now).toISOString()
         } as TokenDTO;
 

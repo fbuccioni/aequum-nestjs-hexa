@@ -3,11 +3,12 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class TokenDto {
-    @ApiProperty({ description: 'Token (access)'})
+    @ApiProperty({ description: 'Access token'})
     @IsString()
     @IsNotEmpty()
-    token: string;
+    accessToken: string;
 
+    @ApiProperty({ description: 'Refresh token', required: false})
     @IsString()
     @IsNotEmpty()
     refreshToken?: string;
