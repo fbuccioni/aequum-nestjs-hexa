@@ -18,7 +18,6 @@ import { capitalize as cap } from '../../../common/utils/string.util';
 import { swaggerAuthModName } from '../../authn/utils/authn.util';
 import { CRUDLControllerOptions, CRUDLMethods } from "../types/crudl.types";
 
-
 /**
  * Factory function to create a CRUDLController class, a controller with CRUDL operations.
  *
@@ -51,14 +50,15 @@ export function CRUDLController<
     ModelUpdateDto: ModelUpdateDtoType,
     options: CRUDLControllerOptions
 ) {
+    type ModelDtoRealType = InstanceType<ModelDtoType>;
+    type ModelCreateDtoRealType = InstanceType<ModelCreateDtoType>;
+    type ModelUpdateDtoRealType = InstanceType<ModelUpdateDtoType>;
+
     const ApiResponseNotFound = ApiResponse({
         status: 404,
         description: `${cap(options.name.singular)} not found.`,
     });
-
-    type ModelDtoRealType = InstanceType<ModelDtoType>;
-    type ModelCreateDtoRealType = InstanceType<ModelCreateDtoType>;
-    type ModelUpdateDtoRealType = InstanceType<ModelUpdateDtoType>;
+    const idRouteParam = options?.id?.routeParam || 'id' ;
 
     /**
      * A Controller class with CRUDL operations.
@@ -151,9 +151,9 @@ export function CRUDLController<
             type: ModelDto,
         })
         @ApiResponseNotFound
-        @Get(':id')
+        @Get(`:${idRouteParam}`)
         async retrieve(
-            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
             @Req() request: any,
             ...args: any[]
         ): Promise<ModelDtoRealType> {
@@ -185,9 +185,9 @@ export function CRUDLController<
             type: ModelUpdateDto,
         })
         @ApiResponseNotFound
-        @Patch(':id')
+        @Patch(`:${idRouteParam}`)
         async update(
-            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
             @Body() body: ModelUpdateDtoRealType,
             @Req() request: any,
             ...args: any[]
@@ -227,10 +227,10 @@ export function CRUDLController<
             description: `The deletion of ${options.name.singular} is forbidden.`,
         })
         @ApiResponseNotFound
-        @Delete(':id')
+        @Delete(`:${idRouteParam}`)
         @HttpCode(204)
         async delete(
-            @Param('id', options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
             @Req() request: any,
             ...args: any[]
         ): Promise<void> {
@@ -294,14 +294,14 @@ export function CRUDLController<
         options.id.type === 'string' ? String :
         options.id.type === 'number' ? Number :
         options.id.type
-    )
+    );
     const setMethodsParamTypeMeta = (keysData: KeyDataTuple[]) => {
         for (const [ key, data ] of keysData)
             Reflect.defineMetadata(
                 PARAMTYPES_METADATA, data,
                 CRUDLController.prototype, key
             );
-    }
+    };
 
     setMethodsParamTypeMeta([
         [ 'create', [ ModelCreateDto ] ],
