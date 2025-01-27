@@ -20,6 +20,7 @@ export type ValidationExceptionError = (
 
 export class ValidationException extends BaseException {
     static code = 'ERR_VALIDATION_ERROR';
+    static HTTPStatusCode = 400;
 
     constructor(public errors: ValidationExceptionError) {
         super('The input object have validation errors');

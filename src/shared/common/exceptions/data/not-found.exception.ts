@@ -3,6 +3,7 @@ import { BaseException } from '../base.exception';
 
 export class NotFoundException extends BaseException {
     static code = 'ERR_NOT_FOUND';
+    static HTTPStatusCode = 404;
 
     /**
      * When data is not found
