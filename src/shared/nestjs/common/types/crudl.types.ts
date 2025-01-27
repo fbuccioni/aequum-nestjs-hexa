@@ -30,7 +30,7 @@ export type CRUDLControllerOptions = {
         /** Pipe to be used to validate the ID */
         validationPipe: ClassConstructor<PipeTransform>;
         /** Route param name */
-        routeParam: string;
+        routeParam?: string;
     };
 
     /** Forbid actions */
