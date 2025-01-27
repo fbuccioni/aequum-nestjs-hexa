@@ -1,5 +1,6 @@
 export class BaseException extends Error {
-    static code = null;
+    static code: string = null;
+    static HTTPStatusCode: number = undefined;
 
     readonly code = undefined;
 
