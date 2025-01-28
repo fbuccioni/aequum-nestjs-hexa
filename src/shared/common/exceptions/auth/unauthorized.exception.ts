@@ -3,6 +3,7 @@ import { BaseException } from '../base.exception';
 
 export class UnauthorizedException extends BaseException {
     static code = 'ERR_UNAUTHORIZED';
+    static HTTPStatusCode = 401;
 
     /**
      * When the user is not authorized to perform an action

@@ -7,6 +7,7 @@ import * as dataUtil from '../../utils/data.util';
 
 export class DuplicateEntryException extends BaseException implements ValidationableException {
     static code = 'ERR_DUPLICATE_ENTRY';
+    static HTTPStatusCode = 409;
 
     /**
      * When data fail to be written due a duplicate entry
