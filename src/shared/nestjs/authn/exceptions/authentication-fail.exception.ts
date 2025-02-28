@@ -3,6 +3,7 @@ import { BaseException } from "../../../common/exceptions/base.exception";
 
 export class AuthenticationFailException extends BaseException {
     static code = 'ERR_AUTHN_FAIL';
+    static HTTPStatusCode = 401;
 
     constructor(
         message,
