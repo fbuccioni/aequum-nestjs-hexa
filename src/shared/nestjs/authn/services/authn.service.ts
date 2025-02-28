@@ -14,6 +14,7 @@ import {
     AuthRefreshTokenCompliantUsersService
 } from '../interfaces/auth-refresh-token-compliant-users-service.interface';
 import { ForbiddenException } from '@nestjs/common';
+import { ServiceUserFieldsMap } from '../types/service-user-fields-map.type';
 
 
 export abstract class AuthnService<User = any, TokenDTO extends TokenDto = TokenDto> {
@@ -40,17 +41,17 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     /**
      * Default fields map for `User` DTO
      */
-    static fields: { [k: string]: string } = {
+    static fields: ServiceUserFieldsMap = {
         username: 'username',
         password: 'password',
         id: 'id',
         refreshToken: 'refreshToken'
-    }
+    };
 
     /**
      * Fields map for `User` DTO
      */
-    protected fields: { [k: string]: string };
+    protected fields: ServiceUserFieldsMap;
 
     constructor(
         /**
@@ -65,18 +66,13 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         if (typeof(disableRefreshToken) !== 'undefined' && disableRefreshToken !== null)
             self.refreshToken = !disableRefreshToken;
 
-        if (self.refreshToken)
-            self.checkUserRefreshTokenService(this.usersService);
-        else
-            self.checkUserService(this.usersService);
-
         const userFields = this.configService
             .get<Record<string, string>>('authentication.user.fields');
 
         if ((!userFields) && !this.fields)
             this.fields = self.fields;
         else {
-            if (!this.fields) this.fields = {};
+            if (!this.fields) this.fields = {} as ServiceUserFieldsMap;
             for (const field in self.fields)
                 if (!this.fields[field])
                     this.fields[field] = userFields[field] || self.fields[field];
@@ -214,36 +210,5 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         const rounds = (configuration() as any).authentication?.password?.saltRounds || 10;
         const salt = bcrypt.genSaltSync(rounds);
         return bcrypt.hashSync(password, salt);
-    }
-
-    static checkUserRefreshTokenService(service: any) {
-        if (
-            typeof service.retrieveByRefreshToken !== 'function'
-            || typeof service.addRefreshToken !== 'function'
-            || typeof service.removeRefreshToken === 'function'
-        )
-            throw new Error(
-                "The service must implement the "
-                + "`AuthRefreshTokenCompliantUsersService` interface"
-            );
-    }
-
-    static checkUserService(service: any) {
-        const self = this;
-        const iface = (
-            self.refreshToken
-            ? 'AuthRefreshTokenCompliantUsersService'
-            : 'AuthCompliantUsersService'
-        );
-
-        if (this.refreshToken)
-            self.checkUserRefreshTokenService(service);
-
-        if (
-            typeof service.retrieveBy !== 'function'
-        )
-            throw new Error(
-                "The service must implement the `" + iface + "` interface"
-            );
     }
 }
