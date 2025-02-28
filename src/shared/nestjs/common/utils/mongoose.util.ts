@@ -15,6 +15,12 @@ export function schemaTransformsForVirtualID<TClass = any>(
         ['toJSON', toObjectOptions || {}],
     ];
 
+    Object.defineProperty(schema, '__hasVirtualID__', {
+        value: true,
+        writable: false,
+        enumerable: false
+    });
+
     for (const [key, options] of transformOptions)
         schema.set(
             key,

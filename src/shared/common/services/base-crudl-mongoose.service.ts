@@ -9,7 +9,7 @@ export abstract class BaseCRUDLMongooseService<
     SchemaModelDto,
     SchemaModelCreateDto,
     SchemaModelUpdateDto,
-    QueryFilter extends any = any,
+    QueryFilter = any,
     PrimaryKeyField extends string = 'id',
 > extends BaseCRUDLService implements BaseCRUDLService {
     protected primaryKeyField: string = '_id';
@@ -27,6 +27,15 @@ export abstract class BaseCRUDLMongooseService<
             return `\`${ self.uniqueFields.join('` or ') }\` already exists`;
 
         return 'Duplicated entry';
+    }
+
+    virtualIDFilterTransform(filter: any) {
+        if (!(this.repository.schema as any).__hasVirtualID__) return;
+
+        if (filter?.id) {
+            filter._id = filter.id;
+            delete filter.id;
+        }``
     }
 
     protected readonly repository: MongooseRepository<SchemaModel>
@@ -48,6 +57,7 @@ export abstract class BaseCRUDLMongooseService<
     }
 
     async retrieveBy(filter: QueryFilter): Promise<SchemaModelDto> {
+        this.virtualIDFilterTransform(filter);
         return this.repository.getOne(filter) as SchemaModelDto;
     }
 
@@ -60,12 +70,11 @@ export abstract class BaseCRUDLMongooseService<
 
     async updateBy(filter: QueryFilter, data: SchemaModelUpdateDto): Promise<SchemaModelDto> {
         const self = this.constructor as typeof BaseCRUDLMongooseService;
+        this.virtualIDFilterTransform(filter);
 
         try {
             await this.repository.update(filter, data);
-            const k = await this.retrieveBy(filter) as unknown as SchemaModelDto;
-            console.log(k, filter);
-            return k;
+            return this.retrieveBy(filter) as unknown as SchemaModelDto;
         } catch (err) {
             throw duplicateEntryExceptionOrError(
                 err, self.duplicateEntryExceptionMessage(), data, self.uniqueFields || []
@@ -78,10 +87,12 @@ export abstract class BaseCRUDLMongooseService<
     }
 
     async deleteBy(filter: QueryFilter): Promise<void> {
+        this.virtualIDFilterTransform(filter);
         return this.repository.delete(filter);
     }
 
     async list(filter?: any): Promise<SchemaModelDto[]> {
+        this.virtualIDFilterTransform(filter);
         return this.repository.find(filter) as unknown as SchemaModelDto[];
     }
 }
