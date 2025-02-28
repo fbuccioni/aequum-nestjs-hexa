@@ -9,6 +9,11 @@ import { ConfigService } from "@nestjs/config";
 
 import configuration from '../../../../application/api/configuration';
 import { UnauthorizedException } from "../../../common/exceptions/auth/unauthorized.exception";
+import { AuthCompliantUsersService } from '../interfaces/auth-compliant-users-service.interface';
+import {
+    AuthRefreshTokenCompliantUsersService
+} from '../interfaces/auth-refresh-token-compliant-users-service.interface';
+import { ForbiddenException } from '@nestjs/common';
 
 
 export abstract class AuthnService<User = any, TokenDTO extends TokenDto = TokenDto> {
@@ -21,7 +26,10 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     /**
      * The users service
      */
-    protected usersService: any;
+    protected usersService: (
+        AuthRefreshTokenCompliantUsersService<User>
+        | AuthCompliantUsersService<User>
+    );
 
     /**
      * The JWT service from nestjs
@@ -51,11 +59,16 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         protected configService: ConfigService
     ) {
         const self = this.constructor as typeof AuthnService;
-
         const disableRefreshToken = this.configService
             .get<boolean>('authentication.disableRefreshToken');
+
         if (typeof(disableRefreshToken) !== 'undefined' && disableRefreshToken !== null)
             self.refreshToken = !disableRefreshToken;
+
+        if (self.refreshToken)
+            self.checkUserRefreshTokenService(this.usersService);
+        else
+            self.checkUserService(this.usersService);
 
         const userFields = this.configService
             .get<Record<string, string>>('authentication.user.fields');
@@ -149,8 +162,9 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         } as TokenDTO;
 
         if (self.refreshToken) {
+            const usersService = this.usersService as AuthRefreshTokenCompliantUsersService<User>;
             data.refreshToken = await this.jwtService.sign({ sub: user[this.fields.id] });
-            await this.storeRefreshToken(user, data.refreshToken);
+            await usersService.addRefreshToken(user[this.fields.id], data.refreshToken);
         }
 
         return data;
@@ -162,11 +176,15 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param token
      */
     async refreshToken(refreshToken: string) {
-        try {
-            const user = await this.usersService.retrieveBy({
-                [this.fields.refreshToken]: refreshToken
-            });
+        const self = this.constructor as typeof AuthnService;
 
+        if (!self.refreshToken)
+            throw new ForbiddenException("Refresh token is disabled");
+
+        try {
+            const usersService = this.usersService as AuthRefreshTokenCompliantUsersService<User>;
+            const user = await usersService.retrieveByRefreshToken(refreshToken);
+            usersService.removeRefreshToken(user[this.fields.id], refreshToken);
             return this.tokenData(user);
         } catch(err) {
             if (err instanceof NotFoundException)
@@ -176,19 +194,6 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
 
             throw err;
         }
-    }
-
-
-    /**
-     * Store the refresh token in the user
-     *
-     * @param user
-     * @param token
-     */
-    async storeRefreshToken(user: User, token: string) {
-        await this.usersService.update(
-            user[this.fields.id], { refreshToken: token }
-        )
     }
 
     /**
@@ -209,5 +214,36 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         const rounds = (configuration() as any).authentication?.password?.saltRounds || 10;
         const salt = bcrypt.genSaltSync(rounds);
         return bcrypt.hashSync(password, salt);
+    }
+
+    static checkUserRefreshTokenService(service: any) {
+        if (
+            typeof service.retrieveByRefreshToken !== 'function'
+            || typeof service.addRefreshToken !== 'function'
+            || typeof service.removeRefreshToken === 'function'
+        )
+            throw new Error(
+                "The service must implement the "
+                + "`AuthRefreshTokenCompliantUsersService` interface"
+            );
+    }
+
+    static checkUserService(service: any) {
+        const self = this;
+        const iface = (
+            self.refreshToken
+            ? 'AuthRefreshTokenCompliantUsersService'
+            : 'AuthCompliantUsersService'
+        );
+
+        if (this.refreshToken)
+            self.checkUserRefreshTokenService(service);
+
+        if (
+            typeof service.retrieveBy !== 'function'
+        )
+            throw new Error(
+                "The service must implement the `" + iface + "` interface"
+            );
     }
 }
