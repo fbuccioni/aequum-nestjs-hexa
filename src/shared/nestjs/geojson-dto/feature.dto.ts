@@ -48,11 +48,11 @@ export class FeatureDto extends Feature {
         | GeometryCollectionDto
     ;
 
-
     @ApiProperty({
         description: 'The properties of the GeoJSON object',
-        required: false
+        required: false,
+        nullable: true,
     })
-    properties?: Record<string, string>;
+    properties?: Record<string, string> | null;
 
 }
