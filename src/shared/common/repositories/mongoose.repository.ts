@@ -49,4 +49,20 @@ export class MongooseRepository<SchemaModel> {
     async update(filter: RootFilterQuery<SchemaModel>, data: AnyKeys<SchemaModel> & AnyObject) {
         return this.model.updateOne(filter, { $set: data }).exec();
     }
+
+    async pushOnArrayProperty(filter: RootFilterQuery<SchemaModel>, property: string, data: any) {
+        return this.model.updateOne(
+            filter, { $push: { [property]: data } } as UpdateQuery<any>
+        ).exec();
+    }
+
+    async pullFromArrayProperty(filter: RootFilterQuery<SchemaModel>, property: string, data: any) {
+        return this.model.updateOne(
+            filter, { $pull: { [property]: data } } as UpdateQuery<any>
+        )
+    }
+
+    async updateQuery(filter: RootFilterQuery<SchemaModel>, query: UpdateQuery<SchemaModel>) {
+        return this.model.updateMany(filter, query).exec();
+    }
 }
