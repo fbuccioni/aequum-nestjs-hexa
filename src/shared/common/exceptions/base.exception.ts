@@ -19,10 +19,7 @@ export class BaseException extends Error {
             configurable: false,
         });
 
-        for (const prop in [ 'code', 'name' ]) {
-            Object.defineProperty(this, prop, enumPropDesc(false));
-        }
-
+        Object.defineProperty(this, 'name', enumPropDesc(false));
         Object.defineProperty(this, 'message', enumPropDesc(true));
     }
 }
