@@ -1,10 +1,15 @@
-import { AnyKeys, HydratedDocument, Model as MongooseModel, RootFilterQuery } from 'mongoose';
+import { AnyKeys, HydratedDocument, Model as MongooseModel, RootFilterQuery, UpdateQuery } from 'mongoose';
+import { NotFoundException } from "../exceptions/data/not-found.exception";
 
 
 type AnyObject = { [ key: string ]: any };
 
 export class MongooseRepository<SchemaModel> {
     protected model: MongooseModel<SchemaModel>;
+
+    get schema() {
+        return this.model.schema;
+    }
 
     async delete(filter: RootFilterQuery<SchemaModel>) {
         await this.model.deleteOne(filter).exec();
@@ -19,11 +24,15 @@ export class MongooseRepository<SchemaModel> {
     }
 
     async getOne(filter: RootFilterQuery<SchemaModel>): Promise<SchemaModel> {
-        return this.model.findOne(filter).exec();
+        const doc = await this.model.findOne(filter).exec();
+        if (!doc) throw new NotFoundException(`${this.model.modelName} not found`);
+        return doc;
     }
 
     async getOneById(id: any): Promise<SchemaModel> {
-        return this.model.findById(id).exec();
+        const doc = await this.model.findById(id).exec();
+        if (!doc) throw new NotFoundException(`${this.model.modelName} not found`);
+        return doc;
     }
 
     async put(data: SchemaModel | AnyObject): Promise<SchemaModel>  {
@@ -38,6 +47,6 @@ export class MongooseRepository<SchemaModel> {
     }
 
     async update(filter: RootFilterQuery<SchemaModel>, data: AnyKeys<SchemaModel> & AnyObject) {
-        await this.model.updateOne(filter, { $set: data }).exec();
+        return this.model.updateOne(filter, { $set: data }).exec();
     }
 }
