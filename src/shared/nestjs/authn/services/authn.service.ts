@@ -1,19 +1,17 @@
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ForbiddenException } from '@nestjs/common';
+import { ConfigService } from "@nestjs/config";
 
 import { JSON } from '../../../common/types/JSON.type';
 import { NotFoundException } from "../../../common/exceptions/data/not-found.exception";
-
 import { TokenDto } from "../dtos/token.dto";
-import { ConfigService } from "@nestjs/config";
-
 import configuration from '../../../../application/api/configuration';
 import { UnauthorizedException } from "../../../common/exceptions/auth/unauthorized.exception";
 import { AuthCompliantUsersService } from '../interfaces/auth-compliant-users-service.interface';
 import {
     AuthRefreshTokenCompliantUsersService
 } from '../interfaces/auth-refresh-token-compliant-users-service.interface';
-import { ForbiddenException } from '@nestjs/common';
 import { ServiceUserFieldsMap } from '../types/service-user-fields-map.type';
 
 
@@ -53,7 +51,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      */
     protected fields: ServiceUserFieldsMap;
 
-    constructor(
+    protected constructor(
         /**
          * The config service from nestjs
          */
@@ -99,6 +97,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * Payload generator, default only with `sub` and `exp`
      *
      * @param user - User DTO
+     * @param issueDate - Date of issue
      */
     async generatePayload(user: User, issueDate: Date): Promise<JSON> {
         return {
@@ -153,13 +152,13 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         const self = this.constructor as typeof AuthnService;
         const payload = await this.generatePayload(user, now);
         const data = {
-            accessToken: await this.jwtService.sign(payload as any),
+            accessToken: await this.jwtService.signAsync(payload as any),
             expiresAt: this.addExpireDate(now).toISOString()
         } as TokenDTO;
 
         if (self.refreshToken) {
             const usersService = this.usersService as AuthRefreshTokenCompliantUsersService<User>;
-            data.refreshToken = await this.jwtService.sign({ sub: user[this.fields.id] });
+            data.refreshToken = await this.jwtService.signAsync({ sub: user[this.fields.id] });
             await usersService.addRefreshToken(user[this.fields.id], data.refreshToken);
         }
 
@@ -169,7 +168,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     /**
      * Refresh the token
      *
-     * @param token
+     * @param refreshToken The user provided refresh token
      */
     async refreshToken(refreshToken: string) {
         const self = this.constructor as typeof AuthnService;
@@ -180,7 +179,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
         try {
             const usersService = this.usersService as AuthRefreshTokenCompliantUsersService<User>;
             const user = await usersService.retrieveByRefreshToken(refreshToken);
-            usersService.removeRefreshToken(user[this.fields.id], refreshToken);
+            await usersService.removeRefreshToken(user[this.fields.id], refreshToken);
             return this.tokenData(user);
         } catch(err) {
             if (err instanceof NotFoundException)
@@ -206,7 +205,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * Hash the password (static sync version)
      * @param password
      */
-    static hashPassword(password: string): Promise<string> {
+    static hashPassword(password: string): string {
         const rounds = (configuration() as any).authentication?.password?.saltRounds || 10;
         const salt = bcrypt.genSaltSync(rounds);
         return bcrypt.hashSync(password, salt);

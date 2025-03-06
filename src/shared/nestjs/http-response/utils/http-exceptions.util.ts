@@ -1,4 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
+
 import { HttpResponseException } from '../exceptions';
 
 
@@ -41,5 +42,4 @@ export function processHttpError(error: any, logger: any) {
     if (error instanceof HttpResponseException) throw error;
     if (error instanceof Error) logger.error(error.message, error);
     if (typeof error == 'string') logger.error(error);
-
 }

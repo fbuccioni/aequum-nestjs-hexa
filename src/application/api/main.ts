@@ -46,7 +46,7 @@ async function bootstrap() {
         const document = SwaggerModule.createDocument(app, config);
         SwaggerModule.setup(`${pathPrefix}/spec`, app, document);
 
-        let [ port, host ] = [
+        const [ port, host ] = [
             configService.get<number>('app.port'),
             configService.get<string>('app.host')
         ]
@@ -63,4 +63,4 @@ async function bootstrap() {
     }
 }
 
-bootstrap();
+void bootstrap();

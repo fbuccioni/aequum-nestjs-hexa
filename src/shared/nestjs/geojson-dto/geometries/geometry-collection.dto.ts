@@ -1,4 +1,5 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
+
 import { GeometryCollection } from '../../../common/geojson/geometries/geometry-collection.geometry';
 import { PointDto } from './point.dto';
 import { MultiPointDto } from './multi-point.dto';
@@ -14,7 +15,7 @@ export class GeometryCollectionDto extends GeometryCollection {
         description: 'The type of the GeoJSON object',
         enum: [ 'GeometryCollection' ]
     })
-    type: 'GeometryCollection' = 'GeometryCollection';
+    type = 'GeometryCollection' as const;
 
     @ApiProperty({
         description: 'The geometries of the GeoJSON object',

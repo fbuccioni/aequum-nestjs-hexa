@@ -1,5 +1,6 @@
 import { buildMessage, ValidateBy, ValidationOptions } from 'class-validator';
 
+
 export function IsCoordinate(
     validationOptions?: ValidationOptions
 ): PropertyDecorator {

@@ -13,7 +13,7 @@ export enum HttpResponseDescriptions {
 
     AMBIGUOUS = 'The requested resource corresponds to any one of a set of representations, each with its own specific location, and agent- driven negotiation information (section 12) is being provided so that the user (or user agent) can select a preferred representation and redirect its request to that location',
     MOVED_PERMANENTLY = 'The requested resource has been assigned a new permanent URI and any future references to this resource SHOULD use one of the returned URIs',
-    FOUND = 'The requested resource resides temporarily under a different URI',
+    FOUND = 'The requested resource is found but resides temporarily under a different URI',
     SEE_OTHER = 'The response to the request can be found under a different URI and SHOULD be retrieved using a GET method on that resource',
     NOT_MODIFIED = 'If the client has performed a conditional GET request and access is allowed, but the document has not been modified, the server SHOULD respond with this status code',
     TEMPORARY_REDIRECT = 'The requested resource resides temporarily under a different URI',

@@ -1,6 +1,7 @@
 import { validate } from 'class-validator';
-import { HttpResponseException } from '../../http-response/exceptions';
 import { HttpStatus } from '@nestjs/common';
+
+import { HttpResponseException } from '../../http-response/exceptions';
 
 
 /**

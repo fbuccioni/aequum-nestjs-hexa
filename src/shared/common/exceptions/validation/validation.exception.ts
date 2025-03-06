@@ -1,6 +1,6 @@
+import * as dataUtil from '../../utils/data.util';
 import { BaseException } from '../base.exception';
 
-import * as dataUtil from '../../utils/data.util';
 
 export type ValidationExceptionErrorDetail = [
     code: string,

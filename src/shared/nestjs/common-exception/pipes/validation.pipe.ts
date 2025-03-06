@@ -1,4 +1,5 @@
 import { ValidationError, ValidationPipe as NestValidationPipe } from "@nestjs/common";
+
 import {
     ValidationException,
     ValidationExceptionErrorDetails,
@@ -40,7 +41,7 @@ export class ValidationPipe extends NestValidationPipe {
                 [] as ValidationExceptionErrorDetails
             );
 
-        return errorsObject as ValidationExceptionErrorObject;
+        return errorsObject;
     }
 
     public createExceptionFactory() {
