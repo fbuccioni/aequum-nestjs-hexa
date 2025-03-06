@@ -55,7 +55,7 @@ export function AuthnController<
                 loginData.username,
                 loginData.password
             );
-            return this.authService.tokenData(user) as TokenDtoRealType;
+            return this.authService.tokenData(user) as Promise<TokenDtoRealType>;
         }
 
         @ApiOperation({ summary: 'Refresh token'})

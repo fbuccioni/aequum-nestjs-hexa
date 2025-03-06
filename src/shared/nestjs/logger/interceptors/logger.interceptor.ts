@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Request, Response } from 'express';
+
 import { LoggerService } from '../services';
 
 
@@ -64,8 +64,8 @@ export class LoggerInterceptor implements NestInterceptor {
         const reqTime = Date.now() - startTime;
         const controllerName = context.getClass().name;
         const handlerName = context.getHandler().name;
-        const request = context.switchToHttp().getRequest<Request>();
-        const response = context.switchToHttp().getResponse<Response>();
+        const request = context.switchToHttp().getRequest<any>();
+        const response = context.switchToHttp().getResponse<any>();
         const { url, method } = request;
         const { statusCode } = response;
         this.logger.log(
