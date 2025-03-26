@@ -1,3 +1,3 @@
-export type ClassConstructor<T> = {
-    new (...args: any[])
+export type ClassConstructor<T = any> = {
+    new (...args: any[]): T
 };

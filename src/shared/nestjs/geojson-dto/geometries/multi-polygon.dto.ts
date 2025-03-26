@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { MultiPolygon } from '../../../common/geojson/geometries';
 
 
@@ -8,7 +9,7 @@ export class MultiPolygonDto extends MultiPolygon {
         description: 'The type of the GeoJSON object',
         enum: [ 'MultiPolygon' ]
     })
-    type: 'MultiPolygon' = 'MultiPolygon';
+    type = 'MultiPolygon' as const;
 
     @ApiProperty({
         description: 'The coordinates of the GeoJSON object',

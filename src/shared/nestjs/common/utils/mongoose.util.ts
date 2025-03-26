@@ -1,5 +1,6 @@
 import { Schema, SchemaOptions } from 'mongoose';
 
+
 type TransformMethods = 'toObject' | 'toJSON';
 
 export function schemaTransformsForVirtualID<TClass = any>(

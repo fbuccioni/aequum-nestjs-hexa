@@ -1,6 +1,6 @@
-import { Example } from 'src/domain/models/example.model';
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+
+import { Example } from '../../domain/models/example.model';
 
 
 export class ExampleDto extends Example {

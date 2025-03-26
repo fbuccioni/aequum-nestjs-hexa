@@ -1,6 +1,5 @@
-import { MongooseRepository } from "../repositories/mongoose.repository";
-import { duplicateEntryExceptionOrError } from '../utils/mongoose.util';
-
+import { MongooseRepository } from "../../repositories/mongoose.repository";
+import { duplicateEntryExceptionOrError } from '../../utils/mongoose.util';
 import { BaseCRUDLService } from "./base-crudl.service";
 
 

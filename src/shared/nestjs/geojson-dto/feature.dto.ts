@@ -1,4 +1,5 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
+
 import { Feature } from '../../common/geojson/feature.class';
 import {
     GeometryCollectionDto,
@@ -16,7 +17,7 @@ export class FeatureDto extends Feature {
         description: 'The type of the GeoJSON object',
         enum: [ 'Feature' ]
     })
-    type: 'Feature' = 'Feature';
+    type = 'Feature' as const;
 
     @ApiProperty({
         description: 'The identifier of the GeoJSON object',

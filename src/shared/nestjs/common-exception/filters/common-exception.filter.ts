@@ -3,10 +3,13 @@ import { FastifyReply } from 'fastify';
 
 import { ValidationableException } from '../../../common/exceptions/interfaces/validationable-exception.interface';
 import { BaseException } from '../../../common/exceptions/base.exception';
-
 import { HttpResponseDescriptions } from '../../http-response/enums';
 
 
+/**
+ * Common exception filter for handling exceptions based
+ * on the `BaseException` class
+ */
 @Catch(BaseException)
 export class CommonExceptionFilter implements ExceptionFilter {
     catch(exception: BaseException & ValidationableException, host: ArgumentsHost) {

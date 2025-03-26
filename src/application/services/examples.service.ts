@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
-
 import { ExampleRepository } from '../../infrastructure/database/repositories/example.repository';
 import { Example } from '../../infrastructure/database/schemas/example.schema';
-
-import { BaseCRUDLMongooseService } from '../../shared/common/services/base-crudl-mongoose.service';
+import { BaseCRUDLMongooseService } from '../../shared/common/crudl/services/base-crudl-mongoose.service';
+import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
 
 
 @Injectable()

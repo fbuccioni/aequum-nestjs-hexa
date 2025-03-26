@@ -1,5 +1,6 @@
 import { Virtual, VirtualOptions } from '@nestjs/mongoose';
 
+
 export const VirtualID = (options?: VirtualOptions) =>
     Virtual({
         options: options || undefined,

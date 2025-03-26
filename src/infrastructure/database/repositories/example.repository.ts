@@ -2,8 +2,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { MongooseRepository } from 'src/shared/common/repositories/mongoose.repository';
-
+import { MongooseRepository } from '../../../shared/common/repositories/mongoose.repository';
 import { Example } from '../schemas/example.schema';
 
 
