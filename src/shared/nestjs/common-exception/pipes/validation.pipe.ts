@@ -8,9 +8,18 @@ import {
 import { conversionFromClassValidatorMap } from "../maps/conversion-from-class-validator.map";
 
 
+/**
+ * Custom validation pipe that converts class-validator errors to a custom exception
+ *
+ * @see ValidationException
+ * @see https://docs.nestjs.com/pipes#the-built-in-validationpipe
+ */
 export class ValidationPipe extends NestValidationPipe {
     isDetailedOutputDisabled = false
 
+    /**
+     * @ignore
+     */
     static constraintToDetailsReducer(
         validationExceptionErrorsDetails: ValidationExceptionErrorDetails,
         [ constraintName, message ]: [ string, string ]
@@ -34,7 +43,14 @@ export class ValidationPipe extends NestValidationPipe {
         return validationExceptionErrorsDetails;
     }
 
-    static validationErrorReducer(errorsObject: ValidationExceptionErrorObject, classValidatorError) {
+    /**
+     * Reducer function that converts a class-validator constraint
+     * errors to a `ValidationExceptionErrorDetails` object
+     *
+     * @param errorsObject - The object to append the error
+     * @param classValidatorError - `class-validator` errors object
+     */
+    static validationErrorReducer(errorsObject: ValidationExceptionErrorObject, classValidatorError: any) {
         errorsObject[classValidatorError.property] = Object.entries(classValidatorError.constraints)
             .reduce(
                 this.constraintToDetailsReducer,
@@ -44,14 +60,18 @@ export class ValidationPipe extends NestValidationPipe {
         return errorsObject;
     }
 
+    /**
+     * Creates a factory function that creates a `ValidationException` object
+     * from a `class-validator` error object
+     */
     public createExceptionFactory() {
         const self = this.constructor as typeof ValidationPipe;
 
         return (validationErrors: ValidationError[] = []) => {
             const errors = validationErrors.reduce(
                 self.validationErrorReducer.bind(self),
-                {} as ValidationExceptionErrorObject
-            );
+                {}
+            ) as ValidationExceptionErrorObject;
 
             return new ValidationException(errors);
         };

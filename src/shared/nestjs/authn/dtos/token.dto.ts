@@ -2,6 +2,9 @@ import { IsNotEmpty, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 
+/**
+ * Default token DTO
+ */
 export class TokenDto {
     @ApiProperty({ description: 'Access token'})
     @IsString()
