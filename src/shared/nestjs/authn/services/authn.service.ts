@@ -15,6 +15,9 @@ import {
 import { ServiceUserFieldsMap } from '../types/service-user-fields-map.type';
 
 
+/**
+ * Abstract class with common things about authentication service.
+ */
 export abstract class AuthnService<User = any, TokenDTO extends TokenDto = TokenDto> {
     /**
      * Whether to use refresh token, must see static `fields.refreshToken`
