@@ -1,8 +1,8 @@
-import { BaseCRUDLService } from "./base-crudl.service";
+import { FindOptionsWhere } from 'typeorm';
+
 import { TypeORMRepository } from '../repository/type-orm.repository';
 import { duplicateEntryExceptionOrError } from '../utils/typeorm.utils';
-import { FindOptionsWhere } from 'typeorm';
-import { generatePrime } from 'node:crypto';
+import { BaseCRUDLService } from "./base-crudl.service";
 
 
 export abstract class BaseCRUDLTypeORMService<

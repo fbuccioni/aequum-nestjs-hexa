@@ -1,16 +1,5 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    HttpCode,
-    Param,
-    Patch,
-    Post,
-    ParseUUIDPipe,
-} from '@nestjs/common';
-
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, ParseUUIDPipe, } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../../../dtos';
 import { ExamplesService } from '../../../services/examples.service';

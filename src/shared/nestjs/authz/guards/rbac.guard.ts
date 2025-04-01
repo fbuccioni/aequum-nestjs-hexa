@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { ConfigService } from "@nestjs/config";
 
 import {
     authzAllowRolesMetaKey,
@@ -11,7 +12,6 @@ import { Policies, Policy } from '../types/policies.type';
 import { UserNotFoundException } from "../exceptions/user-not-found.exception";
 import { RolePropertyNotFoundException } from "../exceptions/role-property-not-found.exception";
 import { WhenNoUserAction, WhenNoUserActions } from "../types/when-no-user-actions.type";
-import { ConfigService } from "@nestjs/config";
 import { ConfigError } from "../exceptions/config-error.exception";
 
 
@@ -66,7 +66,7 @@ export class RBACGuard implements CanActivate {
         if (defaultPolicy) {
             if (!Policies.includes(defaultPolicy as Policy))
                 throw new ConfigError(
-                    `\`defaultPolicy\` must be \`${Policies.join('\`, \`')}\`, but got ${defaultPolicy}`
+                    `\`defaultPolicy\` must be \`${Policies.join('`, `')}\`, but got ${defaultPolicy}`
                 )
             this.defaultPolicy = defaultPolicy as Policy;
         }
@@ -75,7 +75,7 @@ export class RBACGuard implements CanActivate {
         if (whenNoUser) {
             if (!WhenNoUserActions.includes(whenNoUser as WhenNoUserAction))
                 throw new ConfigError(
-                    `\`whenNoUser\` must be \`${WhenNoUserActions.join('\`, \`')}\`, but got ${whenNoUser}`
+                    `\`whenNoUser\` must be \`${WhenNoUserActions.join('`, `')}\`, but got ${whenNoUser}`
                 )
 
             this.whenNoUser = whenNoUser as WhenNoUserAction;
@@ -108,7 +108,7 @@ export class RBACGuard implements CanActivate {
      * in the user object
      * @param userObject - User object to get the roles property.
      */
-    getRolesUserProperty(userObject) {
+    getRolesUserProperty(userObject: any) {
         if (typeof this.rolesUserProperty === 'undefined' || !this.rolesUserProperty) {
             if (userObject?.role) return 'role';
             if (userObject?.roles) return 'roles';
@@ -128,7 +128,6 @@ export class RBACGuard implements CanActivate {
      * @param endpointMethodHandler - Method handler of the endpoint.
      * @param controllerClass - Class of the controller.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     endpointHasFreeAccess(endpointMethodHandler: Function, controllerClass: any) {
         return (
             this.controllerHasFreeAccess(controllerClass) || (
@@ -157,9 +156,8 @@ export class RBACGuard implements CanActivate {
      * @param endpointMethodHandler - Method handler of the endpoint.
      * @param controllerClass - Class of the controller.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     private rolesFromMeta(metaKey: string, endpointMethodHandler: Function, controllerClass: any) {
-        const classWithParents = (c): any[] => {
+        const classWithParents = (c: any): any[] => {
             if (!c.name) return [];
             return [c, ...classWithParents(Object.getPrototypeOf(c))]
         };
@@ -172,7 +170,8 @@ export class RBACGuard implements CanActivate {
             ))
             .flat();
 
-        const endpointRoles: any[] = classAndParents.map((c) => (
+        // TODO: Review
+        const endpointRoles: any[] = classAndParents.map(() => (
                 this.reflector.getAllAndOverride(
                     metaKey, [ endpointMethodHandler, controllerClass ]
                 ) || []
@@ -188,7 +187,6 @@ export class RBACGuard implements CanActivate {
      * @param endpointMethodHandler - Method handler of the endpoint.
      * @param controllerClass - Class of the controller.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     endpointDeniedRoles(endpointMethodHandler: Function, controllerClass: any) {
         return this.rolesFromMeta(authzDenyRolesMetaKey, endpointMethodHandler, controllerClass);
     }
@@ -199,7 +197,6 @@ export class RBACGuard implements CanActivate {
      * @param endpointMethodHandler - Method handler of the endpoint.
      * @param controllerClass - Class of the controller.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     endpointAllowedRoles(endpointMethodHandler: Function, controllerClass: any) {
         return this.rolesFromMeta(authzAllowRolesMetaKey, endpointMethodHandler, controllerClass);
     }

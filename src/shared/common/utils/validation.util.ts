@@ -11,8 +11,8 @@ export async function validateOutputDTO(dto: any, logger: any): Promise<any> {
     const errors = await validate(dto);
 
     if (errors.length) {
-        for (const i in errors) {
-            logger.error(errors[i]);
+        for (const error of errors) {
+            logger.error(error);
         }
     }
 

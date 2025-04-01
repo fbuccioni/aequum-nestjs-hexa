@@ -7,8 +7,8 @@ const sharedInfrastructureComponents = [
 
 
 // Make classes injectables
-for (let c in sharedInfrastructureComponents)
-    Injectable()(sharedInfrastructureComponents[c]);
+for (const c of sharedInfrastructureComponents)
+    Injectable()(c);
 
 // Define the shared infrastructure module
 @Module({

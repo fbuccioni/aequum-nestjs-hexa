@@ -1,8 +1,8 @@
-import { ClassConstructor } from '../../../common/types/class-constructor.type';
 import { PipeTransform } from '@nestjs/common';
 
+import { ClassConstructor } from '../../../common/types/class-constructor.type';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export const CRUDLMethods = [ 'create', 'retrieve', 'update', 'delete', 'list' ] as const;
 
 export type CRUDLMappedMethods<T = any> = {

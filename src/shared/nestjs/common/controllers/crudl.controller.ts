@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PARAMTYPES_METADATA } from "@nestjs/common/constants";
 import {
     Body,
@@ -249,7 +248,7 @@ export function CRUDLController<
         )
             .map((dn) => `Api${swaggerAuthModName(dn)}Auth`);
 
-        (async () => {
+        void (async () => {
             const nestJSSwaggerModule = await import('@nestjs/swagger');
             for (const authDecoName of authDecoNames) {
                 if (!nestJSSwaggerModule[authDecoName])

@@ -1,11 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+
+import { HttpResponse } from '../../../common/interfaces';
 import {
     HttpResponseDescriptions,
     HttpResponseMessages,
     HttpResponseTypes,
     HttpResponseTypesCodes,
 } from '../enums';
-import { HttpResponse } from '../../../common/interfaces';
+
 
 
 /**

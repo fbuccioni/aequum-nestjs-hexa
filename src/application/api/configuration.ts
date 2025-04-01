@@ -1,5 +1,5 @@
-import * as path from 'node:path';
 import { readFileSync } from 'node:fs';
+import * as path from 'node:path';
 
 import * as envUtils from '../../shared/common/utils/env.utils';
 

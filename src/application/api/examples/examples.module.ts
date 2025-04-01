@@ -2,9 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Example } from '../../../infrastructure/database/entities/example.entity';
-
 import { ExamplesService } from '../../services/examples.service';
-
 import { ExamplesController } from './controllers/examples.controller';
 
 

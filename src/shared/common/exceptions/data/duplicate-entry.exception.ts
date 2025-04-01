@@ -1,7 +1,6 @@
 import { BaseException } from '../base.exception';
 import { ValidationException } from '../validation/validation.exception';
 import { ValidationableException } from '../interfaces/validationable-exception.interface';
-
 import * as dataUtil from '../../utils/data.util';
 
 
@@ -15,7 +14,7 @@ export class DuplicateEntryException extends BaseException implements Validation
      * @param message - The error message, if empty uses `Duplicate entry`
      * @param input - The input data
      * @param uniqueProperties - An array of duplicated properties names
-     * @param cause? - The original error
+     * @param cause - The original error
      */
     constructor(
         message?: string,

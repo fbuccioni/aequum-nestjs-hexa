@@ -6,6 +6,6 @@
  * @returns rounded number
  */
 export function naiveRound(num: number, decimalPlaces = 2) {
-    var p = Math.pow(10, decimalPlaces);
+    const p = Math.pow(10, decimalPlaces);
     return Math.round(num * p) / p;
 }

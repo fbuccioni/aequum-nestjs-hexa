@@ -24,7 +24,6 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
      * @param endpointMethodHandler
      * @param controllerClass
      */
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     endpointRequiresAuth(endpointMethodHandler: Function, controllerClass: any) {
         return (
             (!!this.reflector.getAllAndOverride(authnRequiredMetaKey, [ controllerClass ]))
@@ -68,7 +67,7 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
         if (this.endpointRequiresAuth(context.getHandler(), context.getClass()))
             return false;
 
-        const classWithParents = (c): any[] => {
+        const classWithParents = (c: any): any[] => {
             if (!c.name) return [];
             return [c, ...classWithParents(Object.getPrototypeOf(c))]
         };
@@ -98,12 +97,12 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
      *
      * @see {@link https://docs.nestjs.com/recipes/passport#extending-guards}
      */
-    handleRequest<TUser = any>(err, user, info, context): TUser {
+    handleRequest<TUser = any>(err: any, user: any, info: any, context: any): TUser {
         if (err || !user) {
             const token = context
                 .switchToHttp()
                 .getRequest()
-                .headers?.authorization?.replace(/^.*?[ ]/, '')
+                .headers?.authorization?.replace(/^.*? /, '')
             ;
 
             if (info.name === 'TokenExpiredError')

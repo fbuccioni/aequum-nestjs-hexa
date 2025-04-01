@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DataSourceOptions, TypeORMError } from 'typeorm';
 
 import { DuplicateEntryException } from '../exceptions/data/duplicate-entry.exception';
