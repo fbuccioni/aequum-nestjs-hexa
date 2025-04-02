@@ -70,6 +70,6 @@ export class BaseCRUDLMongoosePaginatedService<
             sort,
             projection,
             options
-        ) as unknown as PaginatedSchemaModelDto;
+        ) as unknown as Promise<PaginatedSchemaModelDto>;
     }
 }

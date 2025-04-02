@@ -13,6 +13,6 @@ export class ExampleDto extends Example {
     @ApiProperty( { description: "Age of the example person" } )
     age: number;
 
-    @ApiProperty( { description: "Eamil of the example person" } )
+    @ApiProperty( { description: "Email of the example person" } )
     email: string;
 }

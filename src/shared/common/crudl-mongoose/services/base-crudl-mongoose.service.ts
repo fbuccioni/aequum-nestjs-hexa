@@ -80,8 +80,8 @@ export abstract class BaseCRUDLMongooseService<
     }
 
     /**
-     * Transform the `id` field to `_id` field in the filter.by
-     * checking the model schema if it has a virtual ID field.
+     * Checks if model have virtual ID field and if it has
+     * transforms the `id` field to `_id` field.
      *
      * @param filter
      */
@@ -106,7 +106,9 @@ export abstract class BaseCRUDLMongooseService<
         const self = this.constructor as typeof BaseCRUDLMongooseService;
 
         try {
-            return this.repository.put(data as unknown as SchemaModel) as SchemaModelDto;
+            return this.repository.put(
+                data as unknown as SchemaModel
+            ) as unknown as Promise<SchemaModelDto>;
         } catch (err) {
             throw duplicateEntryExceptionOrError(
                 err, self.duplicateEntryExceptionMessage(), data, self.uniqueFields || []
@@ -120,7 +122,7 @@ export abstract class BaseCRUDLMongooseService<
      * @param id
      */
     async retrieve(id: SchemaModel[PrimaryKeyField]): Promise<SchemaModelDto> {
-        return this.repository.getOneById(id) as SchemaModelDto;
+        return this.repository.getOneById(id) as unknown as Promise<SchemaModelDto>;
     }
 
     /**
@@ -131,7 +133,7 @@ export abstract class BaseCRUDLMongooseService<
     async retrieveBy(filter: CustomFilterType): Promise<SchemaModelDto> {
         return this.repository.getOne(
             this.queryFilterToMongoDBFilter(filter)
-        ) as SchemaModelDto;
+        ) as unknown as Promise<SchemaModelDto>;
     }
 
     /**
@@ -158,7 +160,7 @@ export abstract class BaseCRUDLMongooseService<
 
         try {
             await this.repository.update(this.queryFilterToMongoDBFilter(filter), data);
-            return this.retrieveBy(filter) as unknown as SchemaModelDto;
+            return this.retrieveBy(filter) as unknown as Promise<SchemaModelDto>;
         } catch (err) {
             throw duplicateEntryExceptionOrError(
                 err, self.duplicateEntryExceptionMessage(), data, self.uniqueFields || []
@@ -192,6 +194,6 @@ export abstract class BaseCRUDLMongooseService<
     async list(filter?: any): Promise<SchemaModelDto[]> {
         return this.repository.find(
             this.queryFilterToMongoDBFilter(filter)
-        ) as unknown as SchemaModelDto[];
+        ) as unknown as Promise<SchemaModelDto[]>;
     }
 }
