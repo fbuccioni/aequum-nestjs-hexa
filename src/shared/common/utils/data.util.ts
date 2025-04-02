@@ -1,16 +1,34 @@
+/**
+ * Hide passwords from data object by replacing all the properties
+ * that end with 'password' with '********'
+ *
+ * @param data - Data object
+ */
 export function hidePasswords(data: any) {
     for (const key in data) {
         if (typeof data[key] === 'object')
             data[key] = hidePasswords(data[key]);
-        else if (key.toLowerCase().includes('password'))
+        else if (key.toLowerCase().endsWith('password'))
             data[key] = '********';
     }
 
     return data;
 }
 
-export function objectFromDotNotation(dotNotation: string, obj?: any, value?: any) {
+/**
+ * Set a value in an object using dot notation
+ *
+ * @param dotNotation - Dot notation path
+ * @param obj - Object to set the value if a "false" value is passed
+ * it will create the object
+ * @param value - Value to set
+ * @returns - Object with the value set
+ */
+export function objectFromDotNotation(
+    dotNotation: string, obj?: any, value?: any
+) {
     if (!obj) obj = {};
+
     const parts = dotNotation.split('.');
     const last = parts.pop();
 
@@ -19,7 +37,7 @@ export function objectFromDotNotation(dotNotation: string, obj?: any, value?: an
     return obj;
 }
 
-/*
+/**
 * Deep merge objects.
 * from https://stackoverflow.com/a/48218209/742249
 *

@@ -77,6 +77,9 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
             .some((isPublic) => isPublic)
     }
 
+    /**
+     * @inheritDoc
+     */
     canActivate(
         context: ExecutionContext,
     ): Promise<boolean> | boolean | Observable<boolean> {

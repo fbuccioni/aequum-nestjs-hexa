@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ExampleRepository } from '../../infrastructure/database/repositories/example.repository';
 import { Example } from '../../infrastructure/database/entities';
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
-import { BaseCRUDLTypeORMService } from '../../shared/common/services/base-crudl-typeorm.service';
+import { BaseCRUDLTypeORMService } from '../../shared/common/crudl/services/base-crudl-typeorm.service';
 
 
 @Injectable()

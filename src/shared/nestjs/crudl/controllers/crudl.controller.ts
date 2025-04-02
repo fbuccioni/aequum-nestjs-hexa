@@ -1,4 +1,3 @@
-import { PARAMTYPES_METADATA } from "@nestjs/common/constants";
 import {
     Body,
     Delete,
@@ -7,15 +6,22 @@ import {
     HttpCode,
     Param,
     Patch,
-    Post,
+    Post, Query,
     Req,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
-import { BaseCRUDLService } from "../../../common/services/base-crudl.service";
+import { BaseCRUDLService } from "../../../common/crudl/services/base-crudl.service";
 import { capitalize as cap } from '../../../common/utils/string.util';
-import { swaggerAuthModName } from '../../authn/utils/authn.util';
-import { CRUDLControllerOptions, CRUDLMethods } from "../types/crudl.types";
+import { ClassConstructor } from "../../../common/types/class-constructor.type";
+import * as CRUDLUtil from '../utils/crudl.util'
+import { CRUDLControllerOptions } from "../types/crudl.types";
+
+
+export type SharedListDtoType<T> = T extends Array<infer U extends ClassConstructor>
+    ? InstanceType<U>[]
+    : T extends ClassConstructor ? InstanceType<T>: never
+;
 
 /**
  * Factory function to create a CRUDLController class, a controller with CRUDL operations.
@@ -29,29 +35,44 @@ import { CRUDLControllerOptions, CRUDLMethods } from "../types/crudl.types";
  * NOTE: All types will be processed with `InstanceType` to get the correct type to work with.
  *
  * @typeParam ModelDtoType - Type from `ModelDto` parameter. (`typeof ModelDto`)
+ * @typeParam ModelListDtoType - Type from `ModelListDto` parameter. (`typeof ModelListDto`)
  * @typeParam ModelCreateDtoType - Type from `ModelCreateDto` parameter. (`typeof ModelCreateDto`)
  * @typeParam ModelUpdateDtoType - Type from `ModelUpdateDto` parameter. (`typeof ModelUpdateDto`)
+ * @typeParam ModelFilterDtoType - Type from `ModelFilterDto` parameter. (`typeof ModelFilterDto`)
  *
  * @param ModelDto - The DTO class for the model.
+ * @param ModelListDto - The DTO class for the list of the model.
  * @param ModelCreateDto - The DTO class for creating the model.
  * @param ModelUpdateDto - The DTO class for updating the model.
+ * @param ModelFilterDto - The DTO class for filtering the model.
  * @param options - The options for the CRUDLController.
- *
  * @returns The CRUDLController class.
  */
 export function CRUDLController<
-    ModelDtoType extends new(...args: any[]) => any,
-    ModelCreateDtoType extends new(...args: any[]) => any,
-    ModelUpdateDtoType extends new(...args: any[]) => any
+    ModelDtoType extends ClassConstructor,
+    ModelListDtoType extends ClassConstructor | [ ClassConstructor ],
+    ModelCreateDtoType extends ClassConstructor,
+    ModelUpdateDtoType extends ClassConstructor,
+    ModelFilterDtoType extends ClassConstructor = null,
 >(
     ModelDto: ModelDtoType,
+    ModelListDto: ModelListDtoType,
     ModelCreateDto: ModelCreateDtoType,
     ModelUpdateDto: ModelUpdateDtoType,
-    options: CRUDLControllerOptions
+    ModelFilterDto: ModelFilterDtoType,
+    options?: CRUDLControllerOptions,
+    postProcess: boolean = true,
 ) {
-    type ModelDtoRealType = InstanceType<ModelDtoType>;
-    type ModelCreateDtoRealType = InstanceType<ModelCreateDtoType>;
-    type ModelUpdateDtoRealType = InstanceType<ModelUpdateDtoType>;
+    const CreateDto = ModelCreateDto
+    const RetrieveDto = ModelDto
+    const UpdateDto = ModelUpdateDto
+    const ListDto = ModelListDto
+
+    type FilterDtoType = InstanceType<ModelFilterDtoType>;
+    type CreateDtoType = InstanceType<ModelCreateDtoType>;
+    type RetrieveDtoType = InstanceType<ModelDtoType>;
+    type UpdateDtoType = InstanceType<ModelUpdateDtoType>;
+    type ListDtoType = SharedListDtoType<ModelListDtoType>;
 
     const ApiResponseNotFound = ApiResponse({
         status: 404,
@@ -85,18 +106,31 @@ export function CRUDLController<
         @ApiResponse({
             status: 201,
             description: `The ${options.name.singular} has been successfully created.`,
-            type: ModelCreateDto,
+            type: RetrieveDto,
         })
         @Post()
         @HttpCode(201)
         async create(
-            @Body() body: ModelCreateDtoRealType,
+            @Body() body: CreateDtoType,
             @Req() request: any,
             ...args: any[]
-        ): Promise<ModelDtoRealType> {
-            if (options.transform?.body?.input) options.transform.body.input(body);
+        ): Promise<RetrieveDtoType> {
+            if (options.forbid?.create)
+                throw new ForbiddenException(`Create ${options.name.singular} is forbidden.`);
 
-            return this.service.create(body);
+            await CRUDLUtil.applyTransform(
+                options.transform?.body?.input,
+                body, request, 'create'
+            );
+
+            let responseBody = await this.service.create(body);
+            if (options.transform?.body?.output) {
+                responseBody = await CRUDLUtil.applyTransform(
+                    options.transform?.body?.output,
+                    responseBody, request, 'retrieve'
+                )
+            }
+            return responseBody;
         }
 
         /**
@@ -110,6 +144,7 @@ export function CRUDLController<
          * })`
          * @decorator `@Get()`
          * @param request - Request object.
+         * @param filter - Filter object.(The rest of the queryString)
          *
          * @returns A promise of the list of entity DTOs.
          */
@@ -117,14 +152,30 @@ export function CRUDLController<
         @ApiResponse({
             status: 200,
             description: `List of ${options.name.plural} retrieved successfully.`,
-            type: [ ModelDto ],
+            type: ListDto as any,
         })
         @Get()
         async list(
+            @Query() filter: FilterDtoType,
             @Req() request: any,
             ...args: any[]
-        ): Promise<ModelDtoRealType[]> {
-            return this.service.list();
+        ): Promise<ListDtoType> {
+            if (options.forbid?.list)
+                throw new ForbiddenException(`Listing ${options.name.plural} is forbidden.`);
+
+            await CRUDLUtil.applyTransform(
+                options.transform?.filter?.input,
+                filter, request, 'list'
+            );
+
+            let responseBody: any = await this.service.list(filter);
+            if (options.transform?.body?.output) {
+                responseBody = await CRUDLUtil.applyTransform(
+                    options.transform?.body?.output,
+                    responseBody, request, 'retrieve'
+                )
+            }
+            return responseBody;
         }
 
         /**
@@ -147,17 +198,38 @@ export function CRUDLController<
         @ApiResponse({
             status: 200,
             description: `The ${options.name.singular} retrieved successfully.`,
-            type: ModelDto,
+            type: RetrieveDto,
         })
         @ApiResponseNotFound
         @Get(`:${idRouteParam}`)
         async retrieve(
-            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Param(idRouteParam, options.id.validationPipe) id: RetrieveDtoType['id'],
             @Req() request: any,
             ...args: any[]
-        ): Promise<ModelDtoRealType> {
-            if (options.transform?.id?.input) options.transform.id.input(id);
-            return this.service.retrieve(id);
+        ): Promise<RetrieveDtoType> {
+            if (options.forbid?.retrieve)
+                throw new ForbiddenException(`Retrieving ${options.name.singular} is forbidden.`);
+
+            const filter = { id };
+
+            await CRUDLUtil.applyTransform(
+                options.transform?.filter?.input,
+                filter, request, 'list'
+            );
+
+            await CRUDLUtil.applyTransform(
+                options.transform?.id?.input,
+                id, request, 'retrieve'
+            );
+
+            let responseBody = await this.service.retrieveBy(filter);
+            if (options.transform?.body?.output) {
+                responseBody = await CRUDLUtil.applyTransform(
+                    options.transform?.body?.output,
+                    responseBody, request, 'retrieve'
+                )
+            }
+            return responseBody;
         }
 
         /**
@@ -181,19 +253,43 @@ export function CRUDLController<
         @ApiResponse({
             status: 200,
             description: `The ${options.name.singular} has been successfully updated.`,
-            type: ModelUpdateDto,
+            type: RetrieveDto,
         })
         @ApiResponseNotFound
         @Patch(`:${idRouteParam}`)
         async update(
-            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
-            @Body() body: ModelUpdateDtoRealType,
+            @Param(idRouteParam, options.id.validationPipe) id: RetrieveDtoType['id'],
+            @Body() body: UpdateDtoType,
             @Req() request: any,
             ...args: any[]
-        ): Promise<ModelDtoRealType> {
-            if (options.transform?.id?.input) options.transform.id.input(id);
-            if (options.transform?.body?.input) options.transform.body.input(body);
-            return this.service.update(id, body);
+        ): Promise<RetrieveDtoType> {
+            if (options.forbid?.update)
+                throw new ForbiddenException(`Updating ${options.name.singular} is forbidden.`);
+
+            const filter = { id };
+
+            await CRUDLUtil.applyTransform(
+                options.transform?.filter?.input,
+                filter, request, 'list'
+            );
+            await CRUDLUtil.applyTransform(
+                options.transform?.id?.input,
+                id, request, 'update'
+            );
+            await CRUDLUtil.applyTransform(
+                options.transform?.body?.input,
+                body, request, 'update'
+            );
+
+
+            let responseBody = await this.service.updateBy(filter, body);
+            if (options.transform?.body?.output) {
+                responseBody = await CRUDLUtil.applyTransform(
+                    options.transform?.body?.output,
+                    responseBody, request, 'retrieve'
+                )
+            }
+            return responseBody;
         }
 
         /**
@@ -229,86 +325,31 @@ export function CRUDLController<
         @Delete(`:${idRouteParam}`)
         @HttpCode(204)
         async delete(
-            @Param(idRouteParam, options.id.validationPipe) id: ModelDtoRealType['id'],
+            @Param(idRouteParam, options.id.validationPipe) id: RetrieveDtoType['id'],
             @Req() request: any,
             ...args: any[]
         ): Promise<void> {
             if (options.forbid?.delete)
                 throw new ForbiddenException(`Deleting ${options.name.singular} is forbidden.`);
 
-            if (options.transform?.id?.input) options.transform.id.input(id);
-            return this.service.delete(id);
-        }
-    }
+            const filter = { id };
 
-    // Apply openapi auth decorators asynchronously
-    if (options.auth && options.auth.length) {
-        const authDecoNames: Array<string> = (
-            Array.isArray(options.auth) ? options.auth : [ options.auth ]
-        )
-            .map((dn) => `Api${swaggerAuthModName(dn)}Auth`);
-
-        void (async () => {
-            const nestJSSwaggerModule = await import('@nestjs/swagger');
-            for (const authDecoName of authDecoNames) {
-                if (!nestJSSwaggerModule[authDecoName])
-                    throw new Error(`The auth decorator '${ authDecoName }' is not available in '@nestjs/swagger'`);
-
-                for (const method of CRUDLMethods)
-                    nestJSSwaggerModule[authDecoName]()(
-                        CRUDLController.prototype,
-                        method,
-                        Object.getOwnPropertyDescriptor(CRUDLController.prototype, method)
-                    );
-            }
-        })();
-    }
-
-    // Apply decorators
-    if (options.applyDecorators) {
-        const methods = (
-            ( '*' in options.applyDecorators )
-                ? CRUDLMethods
-                : Object.keys(options.applyDecorators)
-        );
-
-        for (const method of methods) {
-            const decorators = [
-                ...( options.applyDecorators['*'] || [] ),
-                ...( options.applyDecorators[method] || [] )
-            ]
-
-            for (const decorator of decorators)
-                decorator(
-                    CRUDLController.prototype,
-                    method,
-                    Object.getOwnPropertyDescriptor(CRUDLController.prototype, method)
-                );
-        }
-    }
-
-    // Workaround to fix the issues with the metadata
-    type KeyDataTuple = [ string,  any[] ];
-    const idType = (
-        options.id.type === 'string' ? String :
-        options.id.type === 'number' ? Number :
-        options.id.type
-    );
-    const setMethodsParamTypeMeta = (keysData: KeyDataTuple[]) => {
-        for (const [ key, data ] of keysData)
-            Reflect.defineMetadata(
-                PARAMTYPES_METADATA, data,
-                CRUDLController.prototype, key
+            await CRUDLUtil.applyTransform(
+                options.transform?.filter?.input,
+                filter, request, 'list'
             );
-    };
+            await CRUDLUtil.applyTransform(
+                options.transform?.id?.input,
+                id, request, 'update'
+            );
 
-    setMethodsParamTypeMeta([
-        [ 'create', [ ModelCreateDto ] ],
-        [ 'retrieve', [ idType ] ],
-        [ 'update', [ idType, ModelUpdateDto ] ],
-        [ 'delete', [ idType ] ],
-    ]);
-    // End workaround
+            return this.service.deleteBy(filter);
+        }
+    }
+
+    if (postProcess) CRUDLUtil.postProcessClass(
+        CRUDLController, ModelCreateDto, ModelUpdateDto, ModelFilterDto, options
+    )
 
     return CRUDLController;
 }

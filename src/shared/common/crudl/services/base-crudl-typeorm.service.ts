@@ -1,7 +1,7 @@
 import { FindOptionsWhere } from 'typeorm';
 
-import { TypeORMRepository } from '../repository/type-orm.repository';
-import { duplicateEntryExceptionOrError } from '../utils/typeorm.utils';
+import { TypeORMRepository } from '../../repository/type-orm.repository';
+import { duplicateEntryExceptionOrError } from '../../utils/typeorm.utils';
 import { BaseCRUDLService } from "./base-crudl.service";
 
 
