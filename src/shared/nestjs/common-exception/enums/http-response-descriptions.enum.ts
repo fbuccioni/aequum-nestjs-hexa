@@ -6,8 +6,8 @@ export enum HttpResponseDescriptions {
     OK = 'The request has succeeded',
     CREATED = 'The request has been fulfilled and resulted in a new resource being created',
     ACCEPTED = 'The request has been accepted for processing, but the processing has not been completed',
-    NON_AUTHORITATIVE_INFORMATION = 'The returned metainformation in the entity-header is not the definitive set as available from the origin server, but is gathered from a local or a third-party copy',
-    NO_CONTENT = 'The server has fulfilled the request but does not need to return an entity-body, and might want to return updated metainformation',
+    NON_AUTHORITATIVE_INFORMATION = 'The returned meta information in the entity-header is not the definitive set as available from the origin server, but is gathered from a local or a third-party copy',
+    NO_CONTENT = 'The server has fulfilled the request but does not need to return an entity-body, and might want to return updated meta information',
     RESET_CONTENT = 'The server has fulfilled the request and the user agent SHOULD reset the document view which caused the request to be sent',
     PARTIAL_CONTENT = 'The server has fulfilled the partial GET request for the resource',
 
@@ -17,7 +17,7 @@ export enum HttpResponseDescriptions {
     SEE_OTHER = 'The response to the request can be found under a different URI and SHOULD be retrieved using a GET method on that resource',
     NOT_MODIFIED = 'If the client has performed a conditional GET request and access is allowed, but the document has not been modified, the server SHOULD respond with this status code',
     TEMPORARY_REDIRECT = 'The requested resource resides temporarily under a different URI',
-    PERMANENT_REDIRECT = 'The request, and all future requests should be repeated using another URI',
+    PERMANENT_REDIRECT = 'The request and all future requests should be repeated using another URI',
 
     BAD_REQUEST = 'The request could not be understood by the server due to malformed syntax',
     UNAUTHORIZED = 'The request requires user authentication',

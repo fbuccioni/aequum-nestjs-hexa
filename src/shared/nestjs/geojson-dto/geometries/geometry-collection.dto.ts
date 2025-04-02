@@ -1,6 +1,6 @@
 import { ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
-import { GeometryCollection } from '../../../common/geojson/geometries/geometry-collection.geometry';
+import { GeometryCollection } from '../../../common/geojson/geometries';
 import { PointDto } from './point.dto';
 import { MultiPointDto } from './multi-point.dto';
 import { LineStringDto } from './line-string.dto';

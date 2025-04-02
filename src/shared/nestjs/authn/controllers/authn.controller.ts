@@ -42,7 +42,7 @@ export function AuthnController<
 
     @Public()
     class AuthnController {
-        constructor(protected authService: AuthnService<any>) {}
+        constructor(protected authService: AuthnService) {}
 
         @ApiOperation({ summary: 'Login' })
         @ApiResponse({ status: 200, description: 'Login successful', type: TokenDto})
@@ -55,7 +55,7 @@ export function AuthnController<
                 loginData.username,
                 loginData.password
             );
-            return this.authService.tokenData(user) as Promise<TokenDtoRealType>;
+            return await this.authService.tokenData(user) as TokenDtoRealType;
         }
 
         @ApiOperation({ summary: 'Refresh token'})
@@ -64,12 +64,12 @@ export function AuthnController<
         async refreshToken(
             @Body() tokenData: TokenRefreshDtoRealType
         ): Promise<TokenDtoRealType> {
-            return this.authService.refreshToken(tokenData.refreshToken) as Promise<TokenDtoRealType>
+            return await this.authService.refreshToken(tokenData.refreshToken) as TokenDtoRealType
         }
     }
 
     // Workaround to fix the issues with the metadata
-    type KeyDataTuple = [string, any[]];
+    type KeyDataTuple = [ string, any[] ];
     const setMethodsParamTypeMeta = (keysData: KeyDataTuple[]) => {
         for (const [key, data] of keysData)
             Reflect.defineMetadata(
