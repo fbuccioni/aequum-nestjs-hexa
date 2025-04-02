@@ -1,25 +1,25 @@
 pipeline {
   agent any
    environment{
-     
+
         HOST= "10.1.0.14"
         PORT= "8081"
         IMAGE_NAME= "nestjs-boilerplate-app"
-        REGISTRY_CREDENTIAL= 'docker-registery-credentials'
+        REGISTRY_CREDENTIAL= 'docker-registry-credentials'
         DOCKER_IMAGE=''
-        HOME="." 
+        HOME="."
     }
   tools {nodejs "node"}
   //=====================================================================Build stage======================================================================================================
   stages {
-    
-    
+
+
     stage('build') {
       steps {
-        
-        mattermostSend channel: '#staging', 
+
+        mattermostSend channel: '#staging',
                           message: '------------------------------'+JOB_NAME+' pipeline '+BUILD_NUMBER+' started------------------------------'
-        mattermostSend channel: '#staging', 
+        mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to build with build number: '+BUILD_NUMBER
         echo('building')
         sh 'npm install --legacy-peer-deps'
@@ -28,7 +28,7 @@ pipeline {
         success {
             mattermostSend channel: '#staging',
                           color:'good',
-                          message: JOB_NAME+' is builded'
+                          message: JOB_NAME+' is built'
         }
         unstable {
             echo 'I am unstable :/'
@@ -42,20 +42,20 @@ pipeline {
             echo 'Things were different before...'
         }
     }
-      
+
     }
     //=====================================================================Test stage==========================================================================================================
     stage('test') {
-            
+
       steps {
-        mattermostSend channel: '#staging', 
+        mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to test with build number: '+BUILD_NUMBER
         echo('testing')
         sh 'npm test'
       }
       post {
         success {
-            mattermostSend channel: '#staging', 
+            mattermostSend channel: '#staging',
             color:'good',
                           message: JOB_NAME+' test passed :)'
         }
@@ -80,7 +80,7 @@ pipeline {
           }
         }
       steps {
-        mattermostSend channel: '#staging', 
+        mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to develop deploy with build number: '+BUILD_NUMBER
         script{
         DOCKER_IMAGE= docker.build "${env.HOST}:${env.PORT}/comfortech/${env.IMAGE_NAME}_develop:v${BUILD_NUMBER}"
@@ -90,9 +90,9 @@ pipeline {
       }
       post {
         success {
-            mattermostSend channel: '#staging', 
+            mattermostSend channel: '#staging',
             color:'good',
-                          message: JOB_NAME+' develop deployed successfullt :)'
+                          message: JOB_NAME+' develop deployed successfully :)'
         }
         unstable {
             echo 'I am unstable :/'
@@ -114,9 +114,9 @@ pipeline {
             BRANCH_NAME == "main"
           }
         }
-        
+
       steps {
-         mattermostSend channel: '#staging', 
+         mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to with deploy number: '+BUILD_NUMBER
         echo('deploying')
         echo('building docker image and pushing to the registry')
@@ -128,11 +128,11 @@ pipeline {
       }
       post {
         always{
-         
+
                 sh "docker image rm -f ${env.HOST}:${env.PORT}/comfortech/${env.IMAGE_NAME}:v${BUILD_NUMBER}"
         }
         success{
-               mattermostSend channel: '#staging', 
+               mattermostSend channel: '#staging',
                color:'good',
                           message: JOB_NAME+' deployed successfully :)'
               }
@@ -143,18 +143,18 @@ pipeline {
                           message: JOB_NAME+' failed'
               }
         }
-    
+
     }
     //=====================================================================Docker cleanup stage======================================================================================================
     stage('Cleanup docker') {
       steps {
-        mattermostSend channel: '#staging', 
+        mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to cleanup the docker with build number: '+BUILD_NUMBER
       sh 'docker system prune --force --all --volumes'
     }
     post {
         success {
-            mattermostSend channel: '#staging', 
+            mattermostSend channel: '#staging',
             color:'good',
                           message: JOB_NAME+' docker cleaned up successfully :)'
         }
@@ -175,13 +175,13 @@ pipeline {
     stage('cleaning up')
     {
       steps{
-        mattermostSend channel: '#staging', 
+        mattermostSend channel: '#staging',
                           message: JOB_NAME+' started to cleanup the workspace with build number: '+BUILD_NUMBER
         cleanWs()
       }
       post {
         success {
-            mattermostSend channel: '#staging', 
+            mattermostSend channel: '#staging',
                           message: JOB_NAME+' workspace cleaned up successfully :)'
 
             mattermostSend channel: '#staging',
@@ -200,6 +200,6 @@ pipeline {
             echo 'Things were different before...'
         }
     }
-    }      
-} 
+    }
+}
 }

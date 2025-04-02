@@ -1,3 +1,5 @@
+// noinspection JSCommentMatchesSignature
+
 import {
     Body,
     Delete,
@@ -84,6 +86,11 @@ export function CRUDLController<
      * A Controller class with CRUDL operations.
      */
     abstract class CRUDLController {
+        /**
+         * CRUDL service to be used
+         *
+         * @protected
+         */
         protected readonly service: BaseCRUDLService;
 
         /**
@@ -348,7 +355,7 @@ export function CRUDLController<
     }
 
     if (postProcess) CRUDLUtil.postProcessClass(
-        CRUDLController, ModelCreateDto, ModelUpdateDto, ModelFilterDto, options
+        CRUDLController, CreateDto, UpdateDto, ModelFilterDto, options
     )
 
     return CRUDLController;

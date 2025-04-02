@@ -41,7 +41,7 @@ export function objectFromDotNotation(
 * Deep merge objects.
 * from https://stackoverflow.com/a/48218209/742249
 *
-* @param - Objects to merge
+* @param objects - Objects to merge
 * @returns - New object with merged key/values
 */
 export function mergeDeep(...objects: any[]): any {

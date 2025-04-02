@@ -37,7 +37,7 @@ export type CRUDLMappedOperationsWithAll<T = any> = CRUDLMappedOperations<T> & {
 export type CRUDLTransformInputFunction = (input: any, request: any, operation: string ) => void;
 
 /**
- * Optput transformation function, the transform must be done by return
+ * Output transformation function, the transform must be done by return
  *
  * @param data Data to be transformed, can be the body, filter or id
  * @param request Request object
@@ -62,7 +62,7 @@ export type CRUDLControllerOptions = {
     /** Options related to the ID of the entity */
     id: {
         /** Type of the ID this can be a class/constructor */
-        type: 'string' | 'number' | ClassConstructor<any>;
+        type: 'string' | 'number' | ClassConstructor;
         /** Pipe to be used to validate the ID */
         validationPipe: ClassConstructor<PipeTransform>;
         /** Route param name */

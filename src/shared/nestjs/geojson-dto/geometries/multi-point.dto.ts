@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { MultiPoint } from '../../../common/geojson/geometries/multi-point.geometry';
+import { MultiPoint } from '../../../common/geojson/geometries';
 
 
 export class MultiPointDto extends MultiPoint {
