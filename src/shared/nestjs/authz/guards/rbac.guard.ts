@@ -106,7 +106,7 @@ export class RBACGuard implements CanActivate {
      * @throws Error when no roles property cannot be guessed.
      * @throws Error when the configured roles property is not found
      * in the user object
-     * @param userObject - User object to get the roles property.
+     * @param userObject - User object to get the `roles` property.
      */
     getRolesUserProperty(userObject: any) {
         if (typeof this.rolesUserProperty === 'undefined' || !this.rolesUserProperty) {
@@ -204,7 +204,7 @@ export class RBACGuard implements CanActivate {
     /**
      * Whether the context for the endpoint is allowed to access or not
      *
-     * @param context - Endpoint excution context.
+     * @param context - Endpoint execution context.
      * @throws Error when the user is not found and `whenNoUser` is `throwError`.
      * @throws Error when no roles property cannot be guessed.
      * @throws Error when the configured roles property is not found

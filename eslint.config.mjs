@@ -1,4 +1,6 @@
 // @ts-check
+// noinspection NpmUsedModulesInstalled,JSCheckFunctionSignatures,SpellCheckingInspection
+
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 // import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';

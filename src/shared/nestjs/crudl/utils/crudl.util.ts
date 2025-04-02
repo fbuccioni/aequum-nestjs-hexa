@@ -32,7 +32,7 @@ function getMethodDescriptor(
 /**
  * Internal function for post-processing CRUDL controllers,
  * applying auth, decorators, custom decorators and apply
- * the corerct types on metadata for the methods.
+ * the correct types on metadata for the methods.
  *
  * @param CRUDLController CRUDLController based instance
  * @param ModelCreateDto Model DTO for creation to apply in methods metadata

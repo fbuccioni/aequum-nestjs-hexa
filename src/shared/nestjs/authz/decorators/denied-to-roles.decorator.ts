@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-import { authzAllowRolesMetaKey, authzDenyRolesMetaKey } from "../constants/metadata.constants";
+import { authzDenyRolesMetaKey } from "../constants/metadata.constants";
 
 
 /**

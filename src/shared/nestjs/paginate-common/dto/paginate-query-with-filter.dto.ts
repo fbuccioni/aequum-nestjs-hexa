@@ -7,7 +7,7 @@ import { ClassConstructor } from '../../../common/types/class-constructor.type';
 /**
  * Class to create a DTO for pagination with a custom filter if needed.
  *
- * @param ModelFilterDto - Custom filter DTO class if have one
+ * @param ModelFilterDto - Custom filter DTO class when have one
  * @example ```typescript
  * // Create with existing filter
  * class ModelQueryDto

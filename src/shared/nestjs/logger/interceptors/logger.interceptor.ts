@@ -33,23 +33,23 @@ export class LoggerInterceptor implements NestInterceptor {
         const contextType = context.getType();
 
         return next.handle().pipe(
-            tap(
-                () => {
+            tap({
+                next: () => {
                     if (contextType === 'http') {
                         this.logHttpRequest(context, startTime);
                     }
                 },
-                (error: Error) => {
+                error: (error: Error) => {
                     if (contextType === 'http') {
                         this.logHttpRequest(context, startTime);
                     } else {
                         const reqTime = Date.now() - startTime;
                         this.logger.log(
-                            `[${error.name}] ${error.message} ${reqTime}ms`
+                            `[${ error.name }] ${ error.message } ${ reqTime }ms`
                         );
                     }
                 }
-            )
+            })
         );
     }
 

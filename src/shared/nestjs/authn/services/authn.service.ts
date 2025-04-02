@@ -103,6 +103,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
      * @param issueDate - Date of issue
      */
     async generatePayload(user: User, issueDate: Date): Promise<JSON> {
+        // noinspection JSDeprecatedSymbols
         return {
             sub: user[this.fields.id],
             exp: this.addExpireDate(issueDate).getTime() / 1000
@@ -110,7 +111,7 @@ export abstract class AuthnService<User = any, TokenDTO extends TokenDto = Token
     }
 
     /**
-     * Non descriptive exception about username and password for
+     * Non-descriptive exception about username and password for
      * security reasons.
      *
      * @param inputData

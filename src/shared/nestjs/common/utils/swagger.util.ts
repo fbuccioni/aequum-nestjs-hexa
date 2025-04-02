@@ -20,13 +20,13 @@ type GenerateDenormalizedDocument = (
  */
 export function patchDocumentViaSwaggerExplorer(generateDenormalizedDocument: GenerateDenormalizedDocument) {
     // @ts-ignore
-    const oldfn = SwaggerExplorer.prototype.generateDenormalizedDocument;
+    const oldFn = SwaggerExplorer.prototype.generateDenormalizedDocument;
 
     // @ts-ignore
     SwaggerExplorer.prototype.generateDenormalizedDocument = function(...args: any[]) {
         return generateDenormalizedDocument.call(
             this,
-            oldfn.apply(this, args),
+            oldFn.apply(this, args),
             ...args
         );
     }

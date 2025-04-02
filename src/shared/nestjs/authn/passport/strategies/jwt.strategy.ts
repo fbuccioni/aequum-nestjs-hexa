@@ -13,7 +13,7 @@ import { JwtPayload as DefaultJwtPayload } from "../../models/jwt-payload.model"
 export abstract class JwtStrategy<UserDto, JwtPayload extends Record<string, any> = DefaultJwtPayload> extends PassportStrategy(Strategy) {
     protected readonly usersService: any;
 
-    constructor(
+    protected constructor(
         protected readonly configService: ConfigService,
     ) {
         super({

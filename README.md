@@ -45,7 +45,8 @@ DDD and some other design patterns to make the code more readable,
 This boilerplate includes:
 
 - Mongoose (in `mongoose` branch)
-  - Pre build tools for virtual `id` field instead of `_id` 
+  - Pre-built tools for virtual `id` field instead of `_id` 
+  - Pagination using `mongoose-paginate-v2`
 - TypeORM (in `typeorm` branch)
   - URI type connection string 
   - Preconfigured migrations
@@ -55,7 +56,13 @@ This boilerplate includes:
   - CRUDL service
     - Mongoose
     - TypeORM
+    - Supports custom filters for operations
   - CRUDL controller with OpenAPI specs
+- Common and simple pagination
+  - Pagination integrated for CRUDL list operations
+  - Support custom filters
+- Authentication module (authn)
+- RBAC basic authorization module (authz)
 - Docker
 
 ---
@@ -75,38 +82,36 @@ in one place, detailed info will be in  `Shared kernel` section.
 
 The folder structure is as follows:
 
-| Directory        | Layer          |    Description 
--------------------|----------------|----------------------------------
-| `application`    | Application    | Application services, DTOs, Nest Modules, NestJS controllers, etc
-| `domain`         | Domain         | Business logic, entities, value objects, domain services, etc
-| `infrastructure` | Infrastructure | External interfaces, repositories, adapters, anti-corruption layers, etc
-| `shared`         | Shared kernel  | Shared infrastructure components, common code like utilities and decorators, etc
+| Directory        | Layer          | Description                                                                      |
+|------------------|----------------|----------------------------------------------------------------------------------|
+| `application`    | Application    | Application services, DTOs, Nest Modules, NestJS controllers, etc                |
+| `domain`         | Domain         | Business logic, entities, value objects, domain services, etc                    |
+| `infrastructure` | Infrastructure | External interfaces, repositories, adapters, anti-corruption layers, etc         |
+| `shared`         | Shared kernel  | Shared infrastructure components, common code like utilities and decorators, etc |
 
 #### Application layer
 
 The application layer is designed to store application services and DTOs
 also can have different application inside it, the only app by default
-in the boilerplace is `api`.
+in the boilerplate is `api`.
 
 Directory structure:
 
-| Directory  | Description
--------------|----------------------------------
-| `api`      | Default `api` application
-| `dtos`     | Data Transfer Objects
-| `services` | Application services
-
+| Directory  | Description               |
+|------------|---------------------------|
+| `api`      | Default `api` application |
+| `dtos`     | Data Transfer Objects     |
+| `services` | Application services      |
 
 Directory structure for default `api` NestJS application:
 
-| Directory                         | Description
-------------------------------------|----------------------------------
-| `examples`                        | "Example" namespace for the `api`
-| `app.module.ts`                   | Main application module
-| `api-modules.export.ts`           | File to easy export the modules will be used in the application
-| `confirugation.ts`                | Application configuration
-| `shared-infrastructure.module.ts` | A special module to call shared infrastructure components
-
+| Directory                         | Description                                                     |
+|-----------------------------------|-----------------------------------------------------------------|
+| `examples`                        | "Example" namespace for the `api`                               |
+| `app.module.ts`                   | Main application module                                         |
+| `api-modules.export.ts`           | File to easy export the modules will be used in the application |
+| `confirugation.ts`                | Application configuration                                       |
+| `shared-infrastructure.module.ts` | A special module to call shared infrastructure components       |
 
 #### Domain layer
 
@@ -116,13 +121,12 @@ applications attached to the business logic.
 
 Directory structure:
 
-| Directory       | Description
-------------------|-----------------
-| `entities`      | Entities
-| `services`      | Services
-| `value-objects` | Value objects
-| `interfaces`    | Interfaces
-
+| Directory       | Description   |
+|-----------------|---------------|
+| `entities`      | Entities      |
+| `services`      | Services      |
+| `value-objects` | Value objects |
+| `interfaces`    | Interfaces    |
 
 #### Infrastructure layer
 
@@ -133,17 +137,16 @@ brokers, etc.
 The design pattern adopted to connect with external services is the
 repository pattern.
 
-By default the only infrastructure is the `database`.
+By default, the only infrastructure is the `database`.
 
 
 Directory structure:
 
-| Directory               | Description
---------------------------|----------------------------------
-| `database`              | Database infrastructure
-| `database/repositories` | Repositories
-| `database/entities`     | Entities (schemas, models, interfaces, etc.)
-
+| Directory               | Description                                  |
+|-------------------------|----------------------------------------------|
+| `database`              | Database infrastructure                      |
+| `database/repositories` | Repositories                                 |
+| `database/entities`     | Entities (schemas, models, interfaces, etc.) |
 
 #### Shared kernel layer
 
@@ -161,15 +164,14 @@ of different services owned by the company but in different domains.
 
 Directory structure:
 
-| Directory                      | Description
---------------------------------|----------------------------------
-| `common`                       | Common components frameworkless like utils, decorators, etc
-| `infrastructure`               | Shared infrastructure components. 
-| `nestjs`                       | NestJS shared components
-| `nestjs/common`                | Common 
-| `nestjs/health`                | Health check module
-| `nestjs/logger`                | Logger module
-
+| Directory        | Description                                              |
+|------------------|----------------------------------------------------------|
+| `common`         | Common non-nestjs components like utils, decorators, etc |
+| `infrastructure` | Shared infrastructure components.                        |
+| `nestjs`         | NestJS shared components                                 |
+| `nestjs/common`  | Common                                                   |
+| `nestjs/health`  | Health check module                                      |
+| `nestjs/logger`  | Logger module                                            |
 
 ### Code design
 
@@ -282,7 +284,8 @@ helm install {sample-app} {app-0.1.0.tgz} --set service.type=NodePort
 
 #### Kubernetes manifests
 
-Alternativelly you can deploy the application on an up an running kubernetes cluster using provided config files.
+Alternatively you can deploy the application on kubernetes cluster on the fly
+using provided config files.
 
 ```bash
 cd k8s/configFiles
@@ -306,13 +309,13 @@ by calling the following endpoint you can make sure that the application is runn
 
 `http://localhost:{port_number}/health`
 
-most probably you will get a result back as follow
+most probably you will get a result back as follows
 
 > **Example**
 
 > {"status":"ok","info":{"alive":{"status":"up"}},"error":{},"details":{"alive":{"status":"up"}}}
 
-mertics
+Metrics
 
 to get the default metrics of the application you can use the following endpoint
 
@@ -320,7 +323,7 @@ to get the default metrics of the application you can use the following endpoint
 
 ## Documentation
 
-By running following comman you can generate the full code documentation (Compodoc) and get access to it through port `7000`
+By running following command you can generate the full code documentation (Compodoc) and get access to it through port `7000`
 
 ```bash
 npm run doc

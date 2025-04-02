@@ -1,5 +1,5 @@
 /**
- * Takes a number and rounds to a percission number
+ * Takes a number and rounds to a precision number
  *
  * @param num number to be rounded
  * @param decimalPlaces number of decimal places

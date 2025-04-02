@@ -1,3 +1,5 @@
+// noinspection JSCommentMatchesSignature
+
 import { ForbiddenException, Get, Query, Req, } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 
@@ -60,6 +62,7 @@ export function CRUDLPaginatedController<
     abstract class CRUDLPaginatedController extends CRUDLController(
         ModelDto, ModelPaginatedListDto, ModelCreateDto, ModelUpdateDto, ModelFilterDto, options, false
     ) {
+        /** @inheritDoc */
         protected override readonly service: BaseCRUDLPaginatedService;
 
         /**
@@ -77,7 +80,7 @@ export function CRUDLPaginatedController<
          *
          * @returns A promise of the list of entity DTOs.
          */
-        @ApiOperation({ summary: `Get all ${options.name.plural} paginaed` })
+        @ApiOperation({ summary: `Get all ${options.name.plural} paginated` })
         @ApiResponse({
             status: 200,
             description: `Paginated list of ${options.name.plural} retrieved successfully.`,

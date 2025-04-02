@@ -36,11 +36,13 @@ export class LoggerService implements NestLoggerService {
     }
 
     /**
-     * creates the logger
-     * @param context context
+     * Creates the logger service instance
+     *
+     * @param context Context
+     * @param formatOptions Format options
      * @returns logger
      */
-    static createlogger(context?: string, formatOptions?: InspectOptions): LoggerService {
+    static create(context?: string, formatOptions?: InspectOptions): LoggerService {
         return new LoggerService(context, formatOptions);
     }
 
