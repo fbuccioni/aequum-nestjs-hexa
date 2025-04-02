@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-import { Example as DomainExample } from '../../../domain/models'
+import { Example as DomainExample } from '../../../domain/models/example.model'
 
 
 @Entity()

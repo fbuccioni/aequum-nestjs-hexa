@@ -1,3 +1,5 @@
+// noinspection ES6PreferShortImport
+
 import { DataSource } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 

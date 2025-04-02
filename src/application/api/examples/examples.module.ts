@@ -1,3 +1,5 @@
+// noinspection ES6PreferShortImport
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
