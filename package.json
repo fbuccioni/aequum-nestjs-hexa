@@ -55,7 +55,6 @@
         "dotenv": "^16.4.7",
         "dotenv-expand": "^12.0.1",
         "dotenv-flow": "^4.1.0",
-        "faker": "^6.6.6",
         "fastify": "^5.2.0",
         "mongoose": "^8.8.4",
         "mongoose-paginate-v2": "^1.9.0",
@@ -97,7 +96,7 @@
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.7.2",
-        "typescript-eslint": "^8.26.0"
+        "typescript-eslint": "^8.29.0"
     },
     "jest": {
         "moduleFileExtensions": [
