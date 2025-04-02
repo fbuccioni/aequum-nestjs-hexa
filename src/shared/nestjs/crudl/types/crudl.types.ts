@@ -21,7 +21,8 @@ export type CRUDLOperations = typeof CRUDLOperationsList[number];
 export type CRUDLMappedOperations<T = any> = { [ operation in CRUDLOperations ]: T; };
 
 /**
- * CRUDL operations mapped to a type with an "all" option in `*` key
+ * CRUDL operations with an additional `*` key for all operations
+ * mapped to a type
  */
 export type CRUDLMappedOperationsWithAll<T = any> = CRUDLMappedOperations<T> & { '*': T };
 
@@ -89,3 +90,4 @@ export type CRUDLControllerOptions = {
         id?: { input?: CRUDLTransformInputFunction} ;
     };
 };
+
