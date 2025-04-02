@@ -1,13 +1,12 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { APP_INTERCEPTOR /* , APP_GUARD */ } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import * as moduleUtil from '../../shared/nestjs/common/utils/module.util';
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
-import { HttpResponseModule } from '../../shared/nestjs/http-response/http-response.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
 // import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
 // import { RBACGuard } from "../../shared/nestjs/authz/guards/rbac.guard";
@@ -36,7 +35,6 @@ import configuration from './configuration';
             }),
         }),
         LoggerModule,
-        HttpResponseModule,
         HealthModule,
         SharedInfrastructureModule,
         ...moduleUtil.toFlattenArray(APIModules) as DynamicModule[],

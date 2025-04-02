@@ -1,7 +1,7 @@
 type ConversionOptions = {
     /** Local error code equivalent */
     code: string;
-    /** Regular expression to extract the from constraint message */
+    /** Regular expression to extract the constraint message */
     constraintsRegexp?: RegExp | null;
 }
 

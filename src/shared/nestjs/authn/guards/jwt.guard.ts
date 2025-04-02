@@ -34,7 +34,7 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
     }
 
     /**
-     * Wherer the controller is public (no authentication required).
+     * Whether the controller is public (no authentication required).
      *
      * @param controllerClass - Class of the controller.
      */
@@ -61,7 +61,7 @@ export class JwtGuard extends AuthGuard('jwt') implements CanActivate {
     /**
      * Whether the context of the endpoint is public (no authentication required).
      *
-     * @param context - Endpoint excution context.
+     * @param context - Endpoint execution context.
      */
     contextIsPublic(context: ExecutionContext): boolean {
         if (this.endpointRequiresAuth(context.getHandler(), context.getClass()))
