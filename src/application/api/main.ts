@@ -46,6 +46,18 @@ async function bootstrap() {
         const document = SwaggerModule.createDocument(app, config);
         SwaggerModule.setup(`${pathPrefix}/spec`, app, document);
 
+        // CORS
+        const corsConfig: any = configService.get<object>('api.cors') || {};
+        if ( corsConfig.enabled )
+            app.enableCors(Object.fromEntries(
+                Object.entries(corsConfig).filter(
+                    ([ k, v ]: [ string, any ]) => (
+                        v !== undefined && k != 'enabled'
+                    )
+                )
+            ));
+
+        // Listen
         const [ port, host ] = [
             configService.get<number>('app.port'),
             configService.get<string>('app.host')
