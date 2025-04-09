@@ -29,6 +29,26 @@ export default () => {
         },
         api: {
             version: process.env.API_VERSION,
+            cors: {
+                enabled: !!Object.keys(process.env).filter(k => k.startsWith('APP_API_CORS_')).length,
+                origin: ( process.env.APP_API_CORS_ORIGIN || '' ).split(/\s*,\s*/),
+                methods: envUtils.asArray(
+                    process.env.APP_API_CORS_METHODS,
+                    ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+                ),
+                allowHeaders: envUtils.asArray(
+                    process.env.APP_API_CORS_ALLOW_HEADERS,
+                    undefined
+                ),
+                exposedHeaders: envUtils.asArray(
+                    process.env.APP_API_CORS_EXPOSE_HEADERS,
+                    undefined
+                ),
+                credentials: envUtils.asBoolean(process.env.APP_API_CORS_CREDENTIALS, undefined),
+                maxAge: envUtils.asInteger(process.env.APP_API_CORS_MAX_AGE, undefined),
+                preflightContinue: envUtils.asBoolean(process.env.APP_API_CORS_PREFLIGHT_CONTINUE, false),
+                optionsSuccessStatus: envUtils.asInteger(process.env.APP_API_CORS_OPTIONS_SUCCESS_STATUS, 204),
+            }
         },
         authentication: {
             swagger: process.env.AUTH_SWAGGER || null,
