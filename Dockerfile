@@ -11,6 +11,7 @@ COPY ./dist ./dist
 # Installing dependencies
 RUN npm install -g pnpm
 RUN pnpm install -P
+RUN pnpm rebuild bcrypt # FIX: Bug with bcrypt and pnpm
 
 # Run API application
 ENTRYPOINT [ "node", "dist/application/api/main.js" ]
