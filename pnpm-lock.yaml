@@ -80,6 +80,9 @@ importers:
       fastify:
         specifier: ^5.2.0
         version: 5.2.0
+      morgan:
+        specifier: ^1.10.0
+        version: 1.10.0
       passport:
         specifier: ^0.7.0
         version: 0.7.0
@@ -159,9 +162,6 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.10.1)(ts-node@10.9.2(@swc/core@1.10.0)(@types/node@22.10.1)(typescript@5.7.2))
-      morgan:
-        specifier: ^1.10.0
-        version: 1.10.0
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
