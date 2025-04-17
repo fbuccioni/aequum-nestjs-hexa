@@ -15,7 +15,7 @@ export function load() {
  * @param s - String to convert
  * @param defaultValue - Default value if the string is not a boolean
  */
-export function asBoolean(s: any, defaultValue: boolean | undefined = false): boolean | undefined {
+export function asBoolean(s: any, defaultValue?: boolean): boolean | undefined {
     switch (typeof(s)) {
         case 'boolean':
             return s;
