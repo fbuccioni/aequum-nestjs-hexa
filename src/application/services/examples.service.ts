@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { BaseCRUDLMongooseService } from '@aequum/mongoose/services';
 
 import { ExampleRepository } from '../../infrastructure/database/repositories/example.repository';
 import { Example } from '../../infrastructure/database/schemas/example.schema';
-import { BaseCRUDLMongooseService } from '../../shared/common/crudl-mongoose/services/base-crudl-mongoose.service';
-import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../dtos';
+import { ExampleDto } from '../dtos/example.dto';
+import { ExampleUpdateDto } from '../dtos/example-update.dto';
+import { ExampleCreateDto } from '../dtos/example-create.dto';
 
 
 @Injectable()

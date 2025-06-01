@@ -4,15 +4,32 @@ import { Example } from '../../domain/models/example.model';
 
 
 export class ExampleDto extends Example {
-    @ApiProperty( { description: 'Identified of the example' } )
-    _id: string;
-
-    @ApiProperty( { description: 'Name of the example person' } )
+    @ApiProperty({
+        type: 'string', format: 'uuid',
+        description: 'Unique identifier for the example',
+        example: '60c72b2f9b1d8c001c8e4f5a',
+    })
+    id: string;
+    
+    @ApiProperty({
+        type: 'string',
+        description: 'Name of the example',
+        example: 'Sample Example',
+    })
     name: string;
-
-    @ApiProperty( { description: "Age of the example person" } )
+    
+    @ApiProperty({
+        type: 'number',
+        description: 'Age of the example',
+        example: 5,
+    })
     age: number;
-
-    @ApiProperty( { description: "Email of the example person" } )
-    email: string;
+    
+    @ApiProperty({
+        type: 'string',
+        description: 'Breed of the example',
+        example: 'Example Breed',
+        required: false,
+    })
+    breed?: string;
 }

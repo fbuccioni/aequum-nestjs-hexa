@@ -1,13 +1,19 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsMongoId, IsString, IsNumber, IsNotEmpty } from 'class-validator';
 
 
 export class Example {
-    id: string;
+    @IsMongoId()
+    @IsNotEmpty()
+    id: string
 
     @IsNotEmpty()
+    @IsString()
     name: string;
 
+    @IsNotEmpty()
+    @IsNumber()
     age: number;
 
-    email: string;
+    @IsString()
+    breed?: string;
 }

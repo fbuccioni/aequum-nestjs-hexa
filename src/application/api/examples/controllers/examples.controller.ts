@@ -1,10 +1,12 @@
 import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ParseObjectIdPipe } from '@aequum/nestjs-mongoose/pipes';
+import { CRUDLController } from '@aequum/nestjs-crudl/controllers';
 
-import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../../../dtos';
+import { ExampleDto } from '../../../dtos/example.dto';
+import { ExampleUpdateDto } from '../../../dtos/example-update.dto';
+import { ExampleCreateDto } from '../../../dtos/example-create.dto';
 import { ExamplesService } from '../../../services/examples.service';
-import { ParseObjectIdPipe } from '../../../../shared/nestjs/common/pipes/object-id.pipe';
-import { CRUDLController } from '../../../../shared/nestjs/crudl/controllers/crudl.controller';
 
 
 @ApiTags('Example')
@@ -21,7 +23,7 @@ export class ExamplesController extends CRUDLController(
         },
     }
 ) {
-    constructor(protected readonly service: ExamplesService) {
+    constructor(public readonly service: ExamplesService) {
         super();
     }
 }

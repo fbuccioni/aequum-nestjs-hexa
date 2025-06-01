@@ -1,13 +1,14 @@
 import { HydratedDocument } from 'mongoose';
 import paginate from "mongoose-paginate-v2";
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { schemaTransformsForVirtualID } from "@aequum/mongoose/utils";
+import { VirtualID } from "@aequum/nestjs-mongoose/decorators";
 
-import { VirtualID } from "../../../shared/nestjs/common/decorators/mongoose.decorator";
-import { schemaTransformsForVirtualID } from "../../../shared/nestjs/common/utils/mongoose.util";
+import { Example as ExampleModel } from '../../../domain/models/example.model';
 
 
 @Schema()
-export class Example {
+export class Example extends ExampleModel {
     // To use `id` instead of `_id` in the response
     @VirtualID()
     id: string
