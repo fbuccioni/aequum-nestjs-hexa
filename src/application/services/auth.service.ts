@@ -2,8 +2,7 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-
-import { AuthnService } from "../../shared/nestjs/authn/services/authn.service";
+import { AuthnService } from "@aequum/nestjs-authn";
 
 import { UserDto } from "../dtos/user.dto";
 import { UsersService } from "./users.service";
