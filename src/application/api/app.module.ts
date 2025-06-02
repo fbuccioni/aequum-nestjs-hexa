@@ -2,14 +2,14 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR /* , APP_GUARD */ } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { module as moduleUtil } from '@aequum/nestjs-common/utils';
 import { MongooseModule } from '@nestjs/mongoose';
+// import { JwtGuard } from "@aequum/nestjs-authn/guards";
+// import { RBACGuard } from "@aequum/nestjs-authz/guards";
 
-import * as moduleUtil from '../../shared/nestjs/common/utils/module.util';
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
-// import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
-// import { RBACGuard } from "../../shared/nestjs/authz/guards/rbac.guard";
 import { SharedInfrastructureModule } from './shared-infrastructure.module';
 import * as APIModules from './api-modules.export';
 import configuration from './configuration';
