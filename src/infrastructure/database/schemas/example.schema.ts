@@ -1,8 +1,7 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
-import { VirtualID } from "../../../shared/nestjs/common/decorators/mongoose.decorator";
-import { schemaTransformsForVirtualID } from "../../../shared/nestjs/common/utils/mongoose.util";
+import { schemaTransformsForVirtualID } from "@aequum/mongoose/utils";
+import { VirtualID } from "@aequum/nestjs-mongoose/utils";
 
 
 @Schema()
