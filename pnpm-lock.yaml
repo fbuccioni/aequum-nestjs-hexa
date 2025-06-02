@@ -14,9 +14,15 @@ importers:
       '@aequum/nestjs-common':
         specifier: rc
         version: 0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+      '@aequum/nestjs-crudl':
+        specifier: rc
+        version: 0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@aequum/nestjs-exceptions':
         specifier: rc
         version: 0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@aequum/typeorm':
+        specifier: rc
+        version: 0.25.6-alpha(mongodb@6.15.0)(reflect-metadata@0.2.2)(ts-node@10.9.2(@swc/core@1.10.0)(@types/node@22.10.1)(typescript@5.7.2))
       '@aequum/utils':
         specifier: rc
         version: 0.25.5-alpha
@@ -213,6 +219,9 @@ importers:
 
 packages:
 
+  '@aequum/crudl@0.25.6-alpha':
+    resolution: {integrity: sha512-3bpZJzJ3dvII9ouljJkgK0ftkxd/L7RO5JrNVnYPeynWV4qAj/nAP5AcCq4WYQYj72gpJucKufcfkHMVwidcBg==}
+
   '@aequum/exceptions@0.25.6-alpha':
     resolution: {integrity: sha512-ywjNIFGGkGJWz4U1sqUHCSPN0Tey2EhTCebbYMXqb48RhOzOL6oEs/CevtyIOHxIl+OqtPGKv7shmeM5Mu5F2g==}
 
@@ -222,8 +231,20 @@ packages:
   '@aequum/nestjs-common@0.25.5-alpha':
     resolution: {integrity: sha512-n+013+HjyEp2kAdOxdc8Z9V+vZ9BuEIAF3R8JJqxirMxdzpuD5qvGt6Ouk515mNgqow2cQRBBpxt+gRrBQJnyQ==}
 
+  '@aequum/nestjs-crudl@0.25.5-alpha':
+    resolution: {integrity: sha512-wuXTL7SwUsQVwwgEcKx/8BUukMUhISQsKtSH19PUTXbCb7dE+cP2XzWSzqXl+TRD07hsMxNSYjHjgMtABoSZRw==}
+
   '@aequum/nestjs-exceptions@0.25.5-alpha':
     resolution: {integrity: sha512-NKIJ0dhWbdpJNENqEi1QJiyBP5WwJeWr/c71GEmypfprxBXor/1v01RpNvxK5cMnYjElq+qz/1csNaGRR1K0nA==}
+
+  '@aequum/nestjs-paginate-common@0.25.5-alpha':
+    resolution: {integrity: sha512-U+yf2USCyva4gdMR2zHJxdXYpwmQ6xALKYouJhhT+RHERElENw+D4oMwKzEZ1CB7U7wozrITYTRUaQxm1hn1pQ==}
+
+  '@aequum/paginate-common@0.25.6-alpha':
+    resolution: {integrity: sha512-lg00m+zSn32UHngG+VQgEznEq4FEEK7Cwc070+5lhUPvvWgawV6QVAMekWuJ2x7AospkZykhqy9IX3ikXmm/6Q==}
+
+  '@aequum/typeorm@0.25.6-alpha':
+    resolution: {integrity: sha512-Sc7MtUwbDLriV0N9BcvjnWDUEyQUS9I9GsNp65zCCftGYUpon6cZeFaxaXyYNCmBKtMRcxJrrbRintPzP8kfWw==}
 
   '@aequum/types@0.25.6-alpha':
     resolution: {integrity: sha512-xsLmw6fiU0R0CgLIh+Nclqq3Oh3XiZ+xstCi9H/5scyLc/ByRKVT0GNAfIv1XE9SfjheBBd/lahBu2vD3wZh6A==}
@@ -4705,6 +4726,10 @@ packages:
 
 snapshots:
 
+  '@aequum/crudl@0.25.6-alpha':
+    dependencies:
+      '@aequum/paginate-common': 0.25.6-alpha
+
   '@aequum/exceptions@0.25.6-alpha':
     dependencies:
       '@aequum/utils': 0.25.6-alpha
@@ -4747,6 +4772,23 @@ snapshots:
       - class-validator
       - reflect-metadata
 
+  '@aequum/nestjs-crudl@0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+    dependencies:
+      '@aequum/crudl': 0.25.6-alpha
+      '@aequum/nestjs-common': 0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+      '@aequum/nestjs-paginate-common': 0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@aequum/types': 0.25.6-alpha
+      '@aequum/utils': 0.25.6-alpha
+      '@nestjs/common': 10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/swagger': 11.2.0(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+    transitivePeerDependencies:
+      - '@fastify/static'
+      - '@nestjs/core'
+      - class-transformer
+      - class-validator
+      - reflect-metadata
+      - rxjs
+
   '@aequum/nestjs-exceptions@0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
     dependencies:
       '@aequum/exceptions': 0.25.6-alpha
@@ -4760,6 +4802,50 @@ snapshots:
       - class-validator
       - reflect-metadata
       - rxjs
+
+  '@aequum/nestjs-paginate-common@0.25.5-alpha(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+    dependencies:
+      '@aequum/paginate-common': 0.25.6-alpha
+      '@aequum/types': 0.25.6-alpha
+      '@nestjs/common': 10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+      '@nestjs/swagger': 11.2.0(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+    transitivePeerDependencies:
+      - '@fastify/static'
+      - '@nestjs/core'
+      - class-transformer
+      - class-validator
+      - reflect-metadata
+      - rxjs
+
+  '@aequum/paginate-common@0.25.6-alpha': {}
+
+  '@aequum/typeorm@0.25.6-alpha(mongodb@6.15.0)(reflect-metadata@0.2.2)(ts-node@10.9.2(@swc/core@1.10.0)(@types/node@22.10.1)(typescript@5.7.2))':
+    dependencies:
+      '@aequum/crudl': 0.25.6-alpha
+      '@aequum/exceptions': 0.25.6-alpha
+      '@aequum/paginate-common': 0.25.6-alpha
+      typeorm: 0.3.24(mongodb@6.15.0)(reflect-metadata@0.2.2)(ts-node@10.9.2(@swc/core@1.10.0)(@types/node@22.10.1)(typescript@5.7.2))
+    transitivePeerDependencies:
+      - '@google-cloud/spanner'
+      - '@sap/hana-client'
+      - babel-plugin-macros
+      - better-sqlite3
+      - hdb-pool
+      - ioredis
+      - mongodb
+      - mssql
+      - mysql2
+      - oracledb
+      - pg
+      - pg-native
+      - pg-query-stream
+      - redis
+      - reflect-metadata
+      - sql.js
+      - sqlite3
+      - supports-color
+      - ts-node
+      - typeorm-aurora-data-api-driver
 
   '@aequum/types@0.25.6-alpha': {}
 

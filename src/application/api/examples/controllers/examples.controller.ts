@@ -1,8 +1,8 @@
 import { Controller, ParseUUIDPipe, } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CRUDLController } from '@aequum/nestjs-crudl';
 
 import { ExampleCreateDto, ExampleDto, ExampleUpdateDto } from '../../../dtos';
-import { CRUDLController } from '../../../../shared/nestjs/crudl/controllers/crudl.controller';
 import { ExamplesService } from '../../../services/examples.service';
 
 
@@ -20,5 +20,5 @@ export class ExamplesController extends CRUDLController(
         },
     }
 ) {
-    constructor(protected readonly service: ExamplesService) { super(); }
+    constructor(public readonly service: ExamplesService) { super(); }
 }

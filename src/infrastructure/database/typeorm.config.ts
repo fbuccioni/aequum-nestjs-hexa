@@ -1,8 +1,8 @@
 import { EntitySchema } from 'typeorm';
+import { env } from '@aequum/utils';
+import { URIToDataSourceOptions } from '@aequum/typeorm/utils';
+import { module as moduleUtils } from '@aequum/nestjs-common/utils';
 
-import * as env from '../../shared/common/utils/env.utils';
-import { URIToDataSourceOptions } from '../../shared/common/utils/typeorm.utils';
-import * as moduleUtils from '../../shared/nestjs/common/utils/module.util';
 import * as Entities from './entities';
 
 

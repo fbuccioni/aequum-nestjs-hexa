@@ -39,7 +39,9 @@
     "dependencies": {
         "@aequum/nestjs-authn": "rc",
         "@aequum/nestjs-common": "rc",
+        "@aequum/nestjs-crudl": "rc",
         "@aequum/nestjs-exceptions": "rc",
+        "@aequum/typeorm": "rc",
         "@aequum/utils": "rc",
         "@fastify/cors": "^11.0.1",
         "@fastify/static": "^7.0.0",

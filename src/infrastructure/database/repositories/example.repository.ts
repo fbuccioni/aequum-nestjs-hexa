@@ -2,8 +2,8 @@
 
 import { DataSource } from 'typeorm';
 import { Injectable } from '@nestjs/common';
+import { TypeORMRepository } from '@aequum/typeorm/repositories';
 
-import { TypeORMRepository } from '../../../shared/common/repository/type-orm.repository';
 import { Example } from '../entities/example.entity';
 
 
