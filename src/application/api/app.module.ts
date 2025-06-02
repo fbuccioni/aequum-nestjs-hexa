@@ -3,16 +3,16 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR /* , APP_GUARD */ } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { module as moduleUtil } from '@aequum/nestjs-common/utils';
+// import { JwtGuard } from "@aequum/nestjs-authn/guards";
+// import { RBACGuard } from "@aequum/nestjs-authz/guards";
 
-import * as moduleUtil from '../../shared/nestjs/common/utils/module.util';
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';
 import { HealthModule } from '../../shared/nestjs/health/health.module';
-// import { JwtGuard } from "../../shared/nestjs/authn/guards/jwt.guard";
-// import { RBACGuard } from "../../shared/nestjs/authz/guards/rbac.guard";
-import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
 import { SharedInfrastructureModule } from './shared-infrastructure.module';
 import * as APIModules from './api-modules.export';
+import typeORMConfiguration from '../../infrastructure/database/typeorm.config';
 import configuration from './configuration';
 
 

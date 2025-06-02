@@ -4,10 +4,10 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
+import { swagger as swaggerUtil } from '@aequum/nestjs-common/utils';
+import { CommonExceptionFilter } from '@aequum/nestjs-exceptions';
 
 import { AppModule } from './app.module';
-import { CommonExceptionFilter } from '../../shared/nestjs/common-exception/filters/common-exception.filter';
-import { swaggerAuthModName } from '../../shared/nestjs/authn/utils/authn.util';
 
 
 async function bootstrap() {
@@ -40,7 +40,7 @@ async function bootstrap() {
         // Simple OpenAPI auth module add
         const openAPIAuthMod = configService.get<string>('authentication.swagger');
         if (openAPIAuthMod)
-            docBuilder[`add${swaggerAuthModName(openAPIAuthMod)}Auth`]();
+            docBuilder[`add${swaggerUtil.authModName(openAPIAuthMod)}Auth`]();
 
         const config = docBuilder.build()
         const document = SwaggerModule.createDocument(app, config);
