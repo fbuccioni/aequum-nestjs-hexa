@@ -1,4 +1,9 @@
-# NestJS hexagonal boilerplate
+aequum NestJS hexagonal boilerplate
+===================================
+
+aequum framework based template for NestJS applications using hexagonal
+architecture.
+
 
 ## Table of Contents
 
@@ -19,10 +24,19 @@
 - [Run](#run)
   
 
+## Extra documentation
+
+- [Module docs](docs/modules.md)
+
+---
+
 ## Overview
 
-A boilerplate designed to use NestJS with hexagonal architecture,
-DDD and some other design patterns to make the code more readable,
+Designed to create apps simple, easy and fairly fast, using 
+NestJS with hexagonal architecture, DDD and some other design 
+patterns to make the code more readable, maintainable and 
+testable.
+
 
 This boilerplate includes:
 
@@ -34,20 +48,29 @@ This boilerplate includes:
   - Preconfigured migrations
   - Simple migration commands on `npm run`
 - OpenAPI (Swagger) docs
-- Built in CRUDL operations to fasten the development
-  - CRUDL service
+- Built in CRUD/CRUDL operations to fasten the development
+  - CRUD/CRUDL service
     - Mongoose
     - TypeORM
     - Supports custom filters for operations
-  - CRUDL controller with OpenAPI specs
+  - CRUD/CRUDL controller
+    - With configurable options
+    - Supports custom filters for operations
+    - OpenAPI/Swagger documentation automatically generated
+- Descriptive, rich, autoexlpainable and debugable exceptions
+  - `@aequum/nestjs-exceptions` module
 - Common and simple pagination
   - Pagination integrated for CRUDL list operations
   - Support custom filters
-- Authentication module (authn)
-- RBAC basic authorization module (authz)
+- Authentication module via `@aequum/nestjs-auth`
+  - JWT authentication using passport
+  - Password hashing via bcrypt
+  - Decorator for user authentication
+- RBAC basic authorization module via `@aequum/nestjs-authz`
+  - User roles and permissions
+  - Decorators
 - Docker
 
----
 
 ## Code architecture
 
@@ -181,7 +204,7 @@ To do a clear code we use the following convention:
 
 We will use common exceptions in the services to handle the errors
 and will be converted to a proper response in the controller by
-`common-exception` module.
+`@aequum/nestjs-exceptions` module.
 
 #### Duplication exceptions
 
@@ -190,7 +213,7 @@ To handle the duplication exceptions we will catch the `unique` or
 `DuplicateEntryException` that will be handled by `common-exception`
 
 ---
-## OpenAPI
+## OpenAPI/Swagger
 
 by calling the following endpoint you can see the Swagger OpenApi 
 documentation and explore all the available apis and schemas.
