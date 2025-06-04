@@ -1,12 +1,12 @@
 /* An example of an Auth Module *
-import { Module } from "@nestjs/common";
+import { Module } from  '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule, ConfigService } from  '@nestjs/config';
 
-import { AuthService } from "../../services/auth.service";
-import { UsersModule } from "../users/users.module";
-import { JwtStrategy } from "./passport/strategies/jwt.strategy";
-import { AuthController } from "./controllers/auth.controller";
+import { AuthService } from  '../../services/auth.service';
+import { UsersModule } from  '../users/users.module';
+import { JwtStrategy } from  './passport/strategies/jwt.strategy';
+import { AuthController } from  './controllers/auth.controller';
 
 
 @Module({

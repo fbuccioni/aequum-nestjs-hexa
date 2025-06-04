@@ -3,8 +3,8 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_INTERCEPTOR /* , APP_GUARD */ } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { module as moduleUtil } from '@aequum/nestjs-common/utils';
-// import { JwtGuard } from "@aequum/nestjs-authn/guards";
-// import { RBACGuard } from "@aequum/nestjs-authz/guards";
+// import { JwtGuard } from  '@aequum/nestjs-authn/guards';
+// import { RBACGuard } from  '@aequum/nestjs-authz/guards';
 
 import { LoggerInterceptor } from '../../shared/nestjs/logger/interceptors';
 import { LoggerModule } from '../../shared/nestjs/logger/logger.module';

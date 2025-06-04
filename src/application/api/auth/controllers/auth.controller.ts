@@ -1,14 +1,14 @@
 /* An example of an Auth Controller *
-import { ApiTags } from "@nestjs/swagger";
+import { ApiTags } from  '@nestjs/swagger';
 import { Controller } from '@nestjs/common';
-import { AuthnController } from "@aequum/nestjs-authn/controllers";
+import { AuthnController } from  '@aequum/nestjs-authn/controllers';
 import { 
     LoginDto,
     TokenDto,
     TokenRefreshDto
-} from "@aequum/nestjs-authn/dtos";
+} from '@aequum/nestjs-authn/dtos';
 
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from  '../../../services/auth.service';
 
 
 @ApiTags('Auth')
