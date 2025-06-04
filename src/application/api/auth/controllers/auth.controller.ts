@@ -2,7 +2,7 @@
 import { ApiTags } from  '@nestjs/swagger';
 import { Controller } from '@nestjs/common';
 import { AuthnController } from  '@aequum/nestjs-authn/controllers';
-import { 
+import {
     LoginDto,
     TokenDto,
     TokenRefreshDto
