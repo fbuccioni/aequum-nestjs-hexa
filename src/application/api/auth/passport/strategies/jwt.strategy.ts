@@ -1,8 +1,8 @@
 /* An example of a JwtStrategy *
 import { ConfigService } from  '@nestjs/config';
 import { Injectable } from  '@nestjs/common';
-import { 
-    JwtStrategy as JwtAbstractStrategy 
+import {
+    JwtStrategy as JwtAbstractStrategy
 } from '@aequum/nestjs-authn/passport/strategies';
 
 import { UserDto } from  '../../../../dtos/user.dto';
