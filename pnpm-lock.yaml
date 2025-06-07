@@ -8,15 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@aequum/exceptions':
+        specifier: ^0.27.3
+        version: 0.27.3
       '@aequum/nestjs-common':
-        specifier: ^0.26.1
-        version: 0.26.1(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+        specifier: ^0.27.24
+        version: 0.27.24(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
       '@aequum/nestjs-exceptions':
-        specifier: ^0.26.0
-        version: 0.26.0(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
+        specifier: ^0.27.24
+        version: 0.27.24(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@aequum/utils':
-        specifier: ^0.26.1
-        version: 0.26.1
+        specifier: ^0.27.3
+        version: 0.27.3
       '@fastify/cors':
         specifier: ^11.0.1
         version: 11.0.1
@@ -207,20 +210,23 @@ importers:
 
 packages:
 
-  '@aequum/exceptions@0.26.1':
-    resolution: {integrity: sha512-No2OSkSAAcvxIscLps2lE6x0mK3jYdZAbAdv0xGLgemTT2RmuLxE3MrPyz8wf7k0lxZ6Q1d6QBmLZg0hxdGMsg==}
+  '@aequum/exceptions@0.27.3':
+    resolution: {integrity: sha512-nTXgitq3zEBdcx9uEAGXuNGWR8Qi1LiRLnLpBd7pys4+lgeg/dUZ9ZZUqQPBygSM6QoFb1eAiZDQvDKJDHqZpw==}
 
   '@aequum/nestjs-common@0.26.1':
     resolution: {integrity: sha512-D9LkqluaRzWwN+9wFKmbcpafTrGZBrjBFF35u+B3ROCa2p5F803DPk0x/MY47ttWSbISD1KXx9rzbFl3+tMxxQ==}
 
-  '@aequum/nestjs-exceptions@0.26.0':
-    resolution: {integrity: sha512-h7VuShgSL70fX3I+oxLXKTkw1tA9Ykf/lYhovbDh8PgvqX3J792Q5GZb7GoZotF6BbH+x+WPGOQIoeohtIpsQg==}
+  '@aequum/nestjs-common@0.27.24':
+    resolution: {integrity: sha512-lfi8Y5nVcKoUD265fWQAIbxzknQUj+Z1YvbnNjjpDl/xLNNWN/RuaOgZOIoxepMADs7g4MziwRDyW4ZSTYUfmw==}
 
-  '@aequum/types@0.26.1':
-    resolution: {integrity: sha512-1Gl0dLr9Ro3/3sd/Fg9EfuWINopv/MnfZ5twpSmJVspl+VnS88gJvJ/sC0QGrv/TIASEzCn/gcD/BL5HvyIINg==}
+  '@aequum/nestjs-exceptions@0.27.24':
+    resolution: {integrity: sha512-plWt4ruruPhXjTDrCEdSr4GWiVW+Osx3552NPcFiw/Fsmx2zZghubdiwYM69iI0gGNJ7AcNtKA0MrffWh4FK8g==}
 
-  '@aequum/utils@0.26.1':
-    resolution: {integrity: sha512-E1Bwf2qJzjuH/1UDw8TSdVhaMC+uOKk1wkSyTt+3UczhAZ9nqAXUZynyHrjzgjhrWBVe2NoxwOFL25kQEyV8dA==}
+  '@aequum/types@0.27.3':
+    resolution: {integrity: sha512-IjIRoMAZse2f0pJriE28VljjpOsOUO0QCiXUp2SlYdfr5DOfaAG6z4FYy5LzV/T0verH1jvCHMcEnhC5JCgFUg==}
+
+  '@aequum/utils@0.27.3':
+    resolution: {integrity: sha512-6lLQ5Zb7ByVvWK5gyuJuUZoQk1tveDq61C4P8Wi/uFmL9C5gyBAu6yrm6WmY7ajtwFrpkqeHzcW4+QPKksqM8A==}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -4577,9 +4583,9 @@ packages:
 
 snapshots:
 
-  '@aequum/exceptions@0.26.1':
+  '@aequum/exceptions@0.27.3':
     dependencies:
-      '@aequum/utils': 0.26.1
+      '@aequum/utils': 0.27.3
 
   '@aequum/nestjs-common@0.26.1(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)':
     dependencies:
@@ -4592,11 +4598,22 @@ snapshots:
       - class-validator
       - reflect-metadata
 
-  '@aequum/nestjs-exceptions@0.26.0(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+  '@aequum/nestjs-common@0.27.24(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)':
     dependencies:
-      '@aequum/exceptions': 0.26.1
+      '@nestjs/swagger': 11.2.0(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
+    transitivePeerDependencies:
+      - '@fastify/static'
+      - '@nestjs/common'
+      - '@nestjs/core'
+      - class-transformer
+      - class-validator
+      - reflect-metadata
+
+  '@aequum/nestjs-exceptions@0.27.24(@fastify/static@7.0.4)(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)':
+    dependencies:
+      '@aequum/exceptions': 0.27.3
       '@aequum/nestjs-common': 0.26.1(@fastify/static@7.0.4)(@nestjs/common@10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.13)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
-      '@aequum/types': 0.26.1
+      '@aequum/types': 0.27.3
       '@nestjs/common': 10.4.13(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1)
     transitivePeerDependencies:
       - '@fastify/static'
@@ -4606,9 +4623,9 @@ snapshots:
       - reflect-metadata
       - rxjs
 
-  '@aequum/types@0.26.1': {}
+  '@aequum/types@0.27.3': {}
 
-  '@aequum/utils@0.26.1':
+  '@aequum/utils@0.27.3':
     dependencies:
       dotenv: 16.4.7
       dotenv-expand: 12.0.1

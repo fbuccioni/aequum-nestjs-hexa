@@ -26,9 +26,10 @@
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
-        "@aequum/nestjs-common": "^0.26.1",
-        "@aequum/nestjs-exceptions": "^0.26.0",
-        "@aequum/utils": "^0.26.1",
+        "@aequum/exceptions": "^0.27.3",
+        "@aequum/nestjs-common": "^0.27.24",
+        "@aequum/nestjs-exceptions": "^0.27.24",
+        "@aequum/utils": "^0.27.3",
         "@fastify/cors": "^11.0.1",
         "@fastify/static": "^7.0.0",
         "@nestjs/axios": "^3.1.3",
