@@ -2,4 +2,3 @@
 // also are recursive.
 
 export * from './examples/examples.module';
-// export * from './auth/auth.module'; // To use auth module, uncomment this line.
