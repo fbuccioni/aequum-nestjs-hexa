@@ -48,6 +48,31 @@ export default () => {
                 preflightContinue: envUtils.asBoolean(process.env.APP_API_CORS_PREFLIGHT_CONTINUE, false),
                 optionsSuccessStatus: envUtils.asInteger(process.env.APP_API_CORS_OPTIONS_SUCCESS_STATUS, 204),
             }
+        },
+        authentication: {
+            swagger: process.env.AUTH_SWAGGER || null,
+            password: {
+                saltRounds: (+process.env.AUTH_PASSWORD_SALT_ROUNDS) || 10,
+            },
+            jwt: {
+                secret: process.env.AUTH_JWT_SECRET || 'secret',
+                expiresAfter: (+process.env.AUTH_JWT_EXPIRES_AFTER_SECS) || 3600,
+            },
+            disableRefreshToken: envUtils.asBoolean(process.env.AUTH_DISABLE_REFRESH_TOKEN),
+            user:{
+                fields: { // To map custom user fields on User DTO
+                    username: process.env.AUTH_USER_FIELD_USERNAME,
+                    password: process.env.AUTH_USER_FIELD_PASSWORD,
+                    id: process.env.AUTH_USER_FIELD_ID,
+                    refreshToken: process.env.AUTH_USER_FIELD_REFRESH_TOKEN,
+                }
+            }
+        },
+        authorization: {
+            // See the RBACGuard class for more information
+            rolesUserProperty: process.env.AUTHORIZATION_ROLES_USER_PROPERTY,
+            defaultPolicy: process.env.AUTHORIZATION_DEFAULT_POLICY,
+            whenNoUser: process.env.AUTHORIZATION_WHEN_NO_USER,
         }
     };
 };
