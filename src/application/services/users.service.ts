@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import {
     AuthRefreshTokenCompliantUsersService
 } from '@aequum/nestjs-authn/interfaces';
-import { BaseCRUDLInMemoryPaginatedService } from '@aequum/in-memory/services';
+import { BaseCRUDLMongoosePaginatedService } from '@aequum/mongoose/services';
 import { AuthnService } from "@aequum/nestjs-authn/services";
 import { AuthnConfiguration } from "@aequum/nestjs-authn/interfaces/authn-configuration.interface";
 
 import { UserRepository } from '../../infrastructure/database/repositories/user.repository';
-import { User } from '../../domain/models/user.model';
+import { User } from '../../infrastructure/database/schemas/user.schema';
 import { UserDto } from '../dtos/user.dto';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { UserPaginatedListDto } from '../dtos/user-paginated-list.dto';
@@ -16,13 +16,12 @@ import { default as configuration } from '../api/configuration';
 
 
 @Injectable()
-export class UsersService extends BaseCRUDLInMemoryPaginatedService<
+export class UsersService extends BaseCRUDLMongoosePaginatedService<
     User,
     UserDto,
     UserCreateDto,
     UserUpdateDto,
-    UserPaginatedListDto,
-    Partial<User> & { refreshToken?: string | string[] }
+    UserPaginatedListDto
 > implements AuthRefreshTokenCompliantUsersService<UserDto> {
     protected readonly primaryKeyField = 'id';
 
@@ -47,10 +46,7 @@ export class UsersService extends BaseCRUDLInMemoryPaginatedService<
         return user;
     }
 
-    async updateBy(
-        filter: Partial<User>,
-        data: UserUpdateDto
-    ): Promise<UserDto | UserDto[]> {
+    async updateBy(filter: any, data: UserUpdateDto): Promise<UserDto> {
         const self = this.constructor as typeof UsersService;
         self.hashPassword(data, configuration().authentication);
         const updated = await super.updateBy(filter, data);

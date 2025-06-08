@@ -1,18 +1,15 @@
-import { InMemoryRepository } from '@aequum/in-memory/repositories';
+import * as mongoose from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { MongoosePaginatedRepository } from "@aequum/mongoose/repositories/paginated";
+import 'mongoose-paginate-v2'
 
-import { User } from "../../../domain/models/user.model";
+import { User } from '../schemas/user.schema';
 
 
-export class UserRepository extends InMemoryRepository<User, 'id'> {
-    protected data: User[] = [
-        {
-            id: "e16b5c4a-49ce-4968-ab85-33fc2a60b071",
-            name: "System Administrator",
-            username: "admin",
-            // `admin` as default password
-            password: "$2a$12$LZTcYIsTD.66c2qXEgLETehSwQHV9y8CLMEnz2A2S3X67bKw7.ZpG",
-            enabled: true,
-            refreshToken: []
-        }
-    ]
+@Injectable()
+export class UserRepository extends MongoosePaginatedRepository<User> {
+    constructor(@InjectModel(User.name) protected model: mongoose.PaginateModel<User>) {
+        super();
+    }
 }
