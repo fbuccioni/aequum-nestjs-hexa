@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
     AuthRefreshTokenCompliantUsersService
 } from '@aequum/nestjs-authn/interfaces';
-import { BaseCRUDLInMemoryPaginatedService } from '@aequum/in-memory/services';
+import { BaseCRUDLTypeORMService } from '@aequum/typeorm/services';
 import { AuthnService } from "@aequum/nestjs-authn/services";
 import { AuthnConfiguration } from "@aequum/nestjs-authn/interfaces/authn-configuration.interface";
+import { NotFoundException } from '@aequum/exceptions/data';
 
 import { UserRepository } from '../../infrastructure/database/repositories/user.repository';
-import { User } from '../../domain/models/user.model';
+import { User } from '../../infrastructure/database/entities/user.entity';
+import { UserRefreshToken } from '../../infrastructure/database/entities/user-refresh-token.entity';
 import { UserDto } from '../dtos/user.dto';
 import { UserCreateDto } from '../dtos/user-create.dto';
 import { UserPaginatedListDto } from '../dtos/user-paginated-list.dto';
@@ -15,18 +18,17 @@ import { UserUpdateDto } from '../dtos/user-update.dto';
 import { default as configuration } from '../api/configuration';
 
 
+
 @Injectable()
-export class UsersService extends BaseCRUDLInMemoryPaginatedService<
+export class UsersService extends BaseCRUDLTypeORMService<
     User,
     UserDto,
     UserCreateDto,
-    UserUpdateDto,
-    UserPaginatedListDto,
-    Partial<User> & { refreshToken?: string | string[] }
+    UserUpdateDto
 > implements AuthRefreshTokenCompliantUsersService<UserDto> {
-    protected readonly primaryKeyField = 'id';
-
-    constructor(protected repository: UserRepository) {
+    constructor(
+        @InjectRepository(User) protected repository: UserRepository
+    ) {
         super();
     }
 
@@ -40,6 +42,7 @@ export class UsersService extends BaseCRUDLInMemoryPaginatedService<
             );
     }
 
+    /** @inheritdoc */
     async create(data: UserCreateDto): Promise<UserDto> {
         const self = this.constructor as typeof UsersService;
         self.hashPassword(data, configuration().authentication);
@@ -47,33 +50,39 @@ export class UsersService extends BaseCRUDLInMemoryPaginatedService<
         return user;
     }
 
-    async updateBy(
-        filter: Partial<User>,
-        data: UserUpdateDto
-    ): Promise<UserDto | UserDto[]> {
+    /** @inheritdoc */
+    async updateBy(filter: any, data: UserUpdateDto): Promise<UserDto> {
         const self = this.constructor as typeof UsersService;
         self.hashPassword(data, configuration().authentication);
         const updated = await super.updateBy(filter, data);
         return updated;
     }
 
+    /** @inheritdoc */
     async addRefreshToken(id: string, refreshToken: string): Promise<void> {
-        await this.repository.pushOnArrayProperty(
-            { [this.primaryKeyField]: id },
-            'refreshToken',
-            refreshToken
-        );
+        const refreshTokenEntity = new UserRefreshToken();
+        refreshTokenEntity.refreshToken = refreshToken;
+        refreshTokenEntity.user = { [this.primaryKeyField]: id } as User;
+        await this.repository.manager.save(refreshTokenEntity);
     }
 
+    /** @inheritdoc */
     async removeRefreshToken(id: string, refreshToken: string): Promise<void> {
-        await this.repository.pullFromArrayProperty(
-            { [this.primaryKeyField]: id },
-            'refreshToken',
-            refreshToken
-        );
+        await this.repository.createQueryBuilder()
+            .delete()
+            .from(UserRefreshToken)
+            .where({  user: { id }, refreshToken })
+            .execute();
     }
 
+    /** @inheritdoc */
     async retrieveByRefreshToken(refreshToken: string): Promise<UserDto> {
-        return this.retrieveBy({ refreshToken } as any);
+        const user = await this.repository.createQueryBuilder()
+            .leftJoinAndSelect('User.refreshToken', 'refreshToken')
+            .where('refreshToken.refreshToken = :refreshToken', { refreshToken })
+            .getOne();
+
+        if (!user) throw new NotFoundException();
+        return user;
     }
 }
