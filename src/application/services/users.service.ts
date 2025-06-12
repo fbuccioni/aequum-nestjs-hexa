@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
     AuthRefreshTokenCompliantUsersService
 } from '@aequum/nestjs-authn/interfaces';
-import { BaseCRUDLTypeORMService } from '@aequum/typeorm/services';
+import { BaseCRUDLTypeORMPaginatedService } from '@aequum/typeorm/services/paginated';
 import { AuthnService } from "@aequum/nestjs-authn/services";
 import { AuthnConfiguration } from "@aequum/nestjs-authn/interfaces/authn-configuration.interface";
 import { NotFoundException } from '@aequum/exceptions/data';
@@ -20,14 +20,15 @@ import { default as configuration } from '../api/configuration';
 
 
 @Injectable()
-export class UsersService extends BaseCRUDLTypeORMService<
+export class UsersService extends BaseCRUDLTypeORMPaginatedService<
     User,
     UserDto,
     UserCreateDto,
-    UserUpdateDto
+    UserUpdateDto,
+    UserPaginatedListDto
 > implements AuthRefreshTokenCompliantUsersService<UserDto> {
     constructor(
-        @InjectRepository(User) protected repository: UserRepository
+        protected repository: UserRepository
     ) {
         super();
     }

@@ -6,7 +6,7 @@ import {
     Index
 } from 'typeorm';
 
-import { User } from './user.entity';
+import type { User } from './user.entity';
 
 
 @Entity('users_refresh_tokens')
@@ -15,7 +15,7 @@ export class UserRefreshToken {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => User, (user) => user.refreshToken)
+    @ManyToOne('User', (user: User) => user.refreshToken)
     user: User
 
     @Column({ nullable: false })

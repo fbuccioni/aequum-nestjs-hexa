@@ -1,6 +1,6 @@
 import { Controller, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CRUDLController } from "@aequum/nestjs-crudl/controllers";
+import { CRUDLPaginatedController } from "@aequum/nestjs-crudl/controllers";
 import { uniformDataOutputTransform, UniformDataDto } from '@aequum/nestjs-uniform-data';
 
 import { UsersService } from '../../../services/users.service';
@@ -12,9 +12,9 @@ import { UserPaginatedListDto } from "../../../dtos/user-paginated-list.dto";
 
 @ApiTags('User')
 @Controller('users')
-export class UsersController extends CRUDLController(
+export class UsersController extends CRUDLPaginatedController(
     UniformDataDto(UserRetrieveDto),
-    UniformDataDto([ UserRetrieveDto ]),
+    UserPaginatedListDto,
     UserCreateDto,
     UserUpdateDto,
     null,
