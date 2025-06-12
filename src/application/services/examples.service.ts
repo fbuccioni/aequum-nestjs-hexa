@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { BaseCRUDLTypeORMService } from '@aequum/typeorm/services';
 
 import { ExampleRepository } from '../../infrastructure/database/repositories/example.repository';
@@ -15,7 +14,6 @@ export class ExamplesService extends BaseCRUDLTypeORMService<
     ExampleDto
 >{
     constructor(
-        @InjectRepository(Example)
         protected readonly repository: ExampleRepository
     ) {
         super();
