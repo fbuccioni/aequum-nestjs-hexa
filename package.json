@@ -31,12 +31,12 @@
         "migration:revert": "npm run typeorm -- migration:revert"
     },
     "dependencies": {
-        "@aequum/exceptions": "^0.27.9",
-        "@aequum/nestjs-common": "^0.27.30",
-        "@aequum/nestjs-crudl": "^0.27.30",
-        "@aequum/nestjs-exceptions": "^0.27.30",
-        "@aequum/typeorm": "^0.27.9",
-        "@aequum/utils": "^0.27.9",
+        "@aequum/exceptions": "^0.27.15",
+        "@aequum/nestjs-common": "^0.27.39",
+        "@aequum/nestjs-crudl": "^0.27.39",
+        "@aequum/nestjs-exceptions": "^0.27.39",
+        "@aequum/typeorm": "^0.27.15",
+        "@aequum/utils": "^0.27.15",
         "@fastify/cors": "^11.0.1",
         "@fastify/static": "^7.0.0",
         "@nestjs/axios": "<4.0.0",
