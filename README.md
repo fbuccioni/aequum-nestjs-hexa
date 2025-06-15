@@ -1,8 +1,8 @@
 aequum NestJS hexagonal boilerplate
 ===================================
 
-aequum framework based template for NestJS applications using hexagonal
-architecture.
+aequum framework based boilerplate for NestJS applications 
+using hexagonal architecture.
 
 
 ## Table of Contents
@@ -18,15 +18,12 @@ architecture.
     - [Models, database entities and DTOs](#models-database-entities-and-dtos)
     - [Common exceptions](#common-exceptions)
     - [Duplication exceptions](#duplication-exceptions)
+- [`@aequum` Modules](#aequum-modules)
 - [OpenAPI](#openapi)
 - [Build](#build)
 - [Configuration](#configuration)
 - [Run](#run)
   
-
-## Extra documentation
-
-- [Module docs](docs/modules.md)
 
 ---
 
@@ -37,13 +34,12 @@ NestJS with hexagonal architecture, DDD and some other design
 patterns to make the code more readable, maintainable and 
 testable.
 
-
 This boilerplate includes:
 
-- Mongoose (in `mongoose` branch)
+- Mongoose (In `base+mongoose` and `base+auth+mongoose` branch)
   - Pre-built tools for virtual `id` field instead of `_id` 
   - Pagination using `mongoose-paginate-v2`
-- TypeORM (in `typeorm` branch)
+- TypeORM (In `base+typeorm` and `base+auth+typeorm` branch)
   - URI type connection string 
   - Preconfigured migrations
   - Simple migration commands on `npm run`
@@ -62,7 +58,7 @@ This boilerplate includes:
 - Common and simple pagination
   - Pagination integrated for CRUDL list operations
   - Support custom filters
-- Authentication module via `@aequum/nestjs-auth`
+- Authentication module via `@aequum/nestjs-auth` (In `base+auth`, `base+auth+mongoose` and `base+auth+typeorm` branches)
   - JWT authentication using passport
   - Password hashing via bcrypt
   - Decorator for user authentication
@@ -81,6 +77,37 @@ infrastructure associated with it.
 
 We will use a Shared Kernel layer to get all the shared components 
 in one place, detailed info will be in  `Shared kernel` section.
+
+
+## `@aequum` modules
+
+The boilerplate over the time becomes a framework of packages to
+use in favor to have shared components, versioning and all the 
+advantages of port to a package.
+
+### Base `aequum` modules
+
+- **[@aequum/crudl](https://github.com/fbuccioni/aequum/blob/main/packages/crudl/)**: CRUD/CRUDL operations common components
+- **[@aequum/exceptions](https://github.com/fbuccioni/aequum/blob/main/packages/exceptions/)**: Common exceptions collection
+- **[@aequum/geojson-models](https://github.com/fbuccioni/aequum/blob/main/packages/geojson-models/)**: GeoJSON models with `class-validator`
+- **[@aequum/mongoose](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Aequum mongoose tools for repository, pagination, CRUD/CRUDL, configs, and utils
+- **[@aequum/paginate-common](https://github.com/fbuccioni/aequum/blob/main/packages/paginate-common/)**: Paginated results common components
+- **[@aequum/typeorm](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Aequum TypeORM tools for repository, pagination, CRUD/CRUDL, configs, and utils
+- **[@aequum/types](https://github.com/fbuccioni/aequum/blob/main/packages/types/)**: Common types collection
+- **[@aequum/utils](https://github.com/fbuccioni/aequum/blob/main/packages/utils/)**: aequum util functions collection
+- **[@aequum/validators](https://github.com/fbuccioni/aequum/blob/main/packages/validators/)**: Custom validators for `class-validator`
+
+### NestJS `aequum` modules
+
+- **[@aequum/crudl](https://github.com/fbuccioni/aequum/blob/main/packages/crudl/)**: CRUD/CRUDL operations common components
+- **[@aequum/exceptions](https://github.com/fbuccioni/aequum/blob/main/packages/exceptions/)**: Common exceptions collection
+- **[@aequum/geojson-models](https://github.com/fbuccioni/aequum/blob/main/packages/geojson-models/)**: GeoJSON models for `class-validator`
+- **[@aequum/mongoose](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Mongoose tools
+- **[@aequum/paginate-common](https://github.com/fbuccioni/aequum/blob/main/packages/paginate-common/)**: Pagination common components
+- **[@aequum/typeorm](https://github.com/fbuccioni/aequum/blob/main/packages/typeorm/)**: TypeORM tools
+- **[@aequum/types](https://github.com/fbuccioni/aequum/blob/main/packages/types/)**: Common types collection
+- **[@aequum/utils](https://github.com/fbuccioni/aequum/blob/main/packages/utils/)**: Util functions collection
+- **[@aequum/validators](https://github.com/fbuccioni/aequum/blob/main/packages/validators/)**: Custom validators for `class-validator`
 
 
 ### Folder structure
@@ -212,7 +239,7 @@ To handle the duplication exceptions we will catch the `unique` or
 `primary key` exception and replacing it for a 
 `DuplicateEntryException` that will be handled by `common-exception`
 
----
+
 ## OpenAPI/Swagger
 
 by calling the following endpoint you can see the Swagger OpenApi 
@@ -221,7 +248,6 @@ documentation and explore all the available apis and schemas.
 `http://localhost:{port_number}/api/{api_version}/spec`
 
 
----
 ## Build
 
 In favor of having a lightweight service, we use `pnpm` as package manager,
@@ -238,14 +264,14 @@ sed -i -e 's/\("typeCheck":\)[ \t]*true/\1 false/g' nest-cli.json
 npx nest build
 ```
 
----
+
 ## Configuration
 
 To run the application you must configure the environment, here is a file
 [`.env.example`](.env.example) with the default value, you can copy it to
 `.env` and change the values to your needs.
 
----
+
 ## Run
 
 The main entrypoint file must be `dist/application/api/main.js` and you must
