@@ -1,0 +1,23 @@
+# AWS Lambda Dockerfile
+
+# For detailed information about serverless in this 
+# boilerplate see:
+# https://github.com/fbuccioni/aequum-nestjs-hexa#serverless
+
+FROM public.ecr.aws/lambda/nodejs:22
+
+# Copy package stuff
+COPY package.json pnpm-lock.yaml ${LAMBDA_TASK_ROOT}
+WORKDIR ${LAMBDA_TASK_ROOT}
+
+# Using pnpm instead of npm to save space
+RUN npm -g install pnpm
+RUN pnpm install -P
+# Workaround for pnpm and bcrypt bug
+RUN pnpm rebuild bcrypt
+RUN npm -g uninstall pnpm
+
+# Copy dist
+COPY dist/application/api/main.js ${LAMBDA_TASK_ROOT}
+
+CMD [ "main.handler" ]

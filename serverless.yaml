@@ -1,0 +1,54 @@
+# Serverless YAML base for AWS Lambda.
+
+# For detailed information about serverless in this 
+# boilerplate see:
+# https://github.com/fbuccioni/aequum-nestjs-hexa#serverless
+
+service: aequum-nestjs-hexa
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-common-excludes
+  - '@jimdo/serverless-dotenv'
+
+provider:
+  name: aws
+  versionFunctions: false
+  ecr:
+    images:
+      aequum-nestjs-hexa-service:
+        path: ./
+        file: Dockerfile.aws-lambda
+
+custom:
+  dotenv:
+    path: .env.${sls:stage}
+
+package:
+  exclude:
+    - ./**
+    - "!dist/**"
+    - "!node_modules/**"
+
+functions:
+  main:
+    image:
+      name: service
+    environment:
+      NODE_ENV: ${env:NODE_ENV}
+      APP_RUN_MODE: aws-lambda
+      API_VERSION: ${env:API_VERSION}
+      APP_API_CORS_ORIGIN: ${env:APP_API_CORS_ORIGIN}
+      AUTH_SWAGGER: ${env:AUTH_SWAGGER}
+      AUTH_JWT_SECRET: ${env:AUTH_JWT_SECRET}
+      AUTH_USER_FIELD_USERNAME: ${env:AUTH_USER_FIELD_USERNAME}
+      DATABASE_MAIN_URI: ${env:DATABASE_MAIN_URI}
+    events:
+      - http:
+          method: ANY
+          path: /
+          cors: true
+      - http:
+          method: ANY
+          path: '{proxy+}'
+          cors: true
