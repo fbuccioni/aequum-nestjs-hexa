@@ -12,6 +12,7 @@
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
+        "build:webpack": "nest build --webpack",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "nest start --watch",
@@ -28,7 +29,9 @@
         "migration:create": "sh -c 'npx typeorm migration:create \"src/infrastructure/database/migrations/$0\" \"$@\"'",
         "migration:generate": "sh -c 'n=$([ \"$0\" = \"sh\" ] && echo auto || echo \"$0\"); npm run typeorm -- migration:generate \"src/infrastructure/database/migrations/${n}\" \"$@\"'",
         "migration:run": "npm run typeorm -- migration:run",
-        "migration:revert": "npm run typeorm -- migration:revert"
+        "migration:revert": "npm run typeorm -- migration:revert",
+        "serverless:deploy:dev": "npm run build:webpack && serverless deploy --stage dev",
+        "serverless:deploy:prod": "npm run build:webpack && serverless deploy --stage prod"
     },
     "dependencies": {
         "@aequum/exceptions": "^0.27.15",
