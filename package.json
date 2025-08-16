@@ -12,6 +12,7 @@
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
+        "build:webpack": "nest build --webpack",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "nest start --watch",
@@ -23,7 +24,9 @@
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "serverless:deploy:dev": "npm run build:webpack && serverless deploy --stage dev",
+        "serverless:deploy:prod": "npm run build:webpack && serverless deploy --stage prod"
     },
     "dependencies": {
         "@aequum/mongoose": "^0.27.15",
