@@ -18,6 +18,16 @@ architecture.
     - [Models, database entities and DTOs](#models-database-entities-and-dtos)
     - [Common exceptions](#common-exceptions)
     - [Duplication exceptions](#duplication-exceptions)
+- [`Serverless`](#serverless)
+  - [Local development](#local-development)
+  - [Environment variables](#environment-variables)
+  - [AWS Lambda](#aws-lambda)
+    - [Dependencies](#dependencies)
+    - [Handler](#handler)
+    - [Dockerfile](#dockerfile)
+    - [Deploy](#deploy)
+  - [Debug serverless handler](#debug-serverless-handler)
+- [`@aequum` Modules](#aequum-modules)
 - [OpenAPI](#openapi)
 - [Build](#build)
 - [Configuration](#configuration)
@@ -40,7 +50,8 @@ testable.
 
 This boilerplate includes:
 
-- Mongoose (in `mongoose` branch)
+- Serverless support via [Serverless Framework](https://www.serverless.com/)
+- Mongoose (In `base+mongoose` and `base+auth+mongoose` branch)
   - Pre-built tools for virtual `id` field instead of `_id` 
   - Pagination using `mongoose-paginate-v2`
 - TypeORM (in `typeorm` branch)
@@ -69,6 +80,7 @@ This boilerplate includes:
 - RBAC basic authorization module via `@aequum/nestjs-authz`
   - User roles and permissions
   - Decorators
+- Bundled dist for production (`npm run build:webpack`)
 - Docker
 
 
@@ -81,6 +93,114 @@ infrastructure associated with it.
 
 We will use a Shared Kernel layer to get all the shared components 
 in one place, detailed info will be in  `Shared kernel` section.
+
+
+## Serverless 
+
+Support for serverless stack via 
+[__ServerlessFramework__](https://serverless.com/), 
+because it's a fast and easy way to deploy and operate with 
+the cloud infrastructure. The boilerplate provides a base 
+`serverless.yaml` file.
+
+### Local development
+
+We always will use 
+[`serverless-offline`](https://www.serverless.com/plugins/serverless-offline)
+plugin for local development.
+
+### Environment variables
+
+To pass the environment variables to the cloud function we use the 
+[`serverless-dotenv`](https://www.serverless.com/plugins/serverless-dotenv) plugin, this plugin by default uses 
+`.env.${sls:stage}` file to apply the environment variables into
+the cloud function.
+
+### AWS Lambda
+
+We are using AWS Lambda with ECR image to deploy the application,
+this is because the dependencies are too big for a normal lambda 
+function, 
+
+The value for `APP_RUN_MODE` for this backend is `aws-lambda`.
+
+#### Dependencies
+
+To use serverless stack you must install the following packages:
+
+Serverless Framework plugins:
+```shell
+pnpm install -D serverless-offline serverless-plugin-common-excludes @jimdo/serverless-dotenv
+```
+
+AWS Lambda and its Fastify adapter:
+```shell
+pnpm install aws-lambda @fastify/aws-lambda
+```
+
+#### Handler
+
+The handler is in `src/application/api/aws-lambda.ts`, just 
+delete the lines 10 and the last to uncomment and use the file.
+
+#### Dockerfile
+
+The Dockerfile used to build the AWS Lambda imageis in `Dockerfile.aws-lambda` file.
+
+#### Deploy
+
+To deploy the application we provide the following `npm` scripts:
+
+- `serverless:deploy:dev`: Deploy to development environment
+- `serverless:deploy:prod`: Deploy to production environment
+
+So to deploy the application you just have to run:
+```shell
+pnpm run serverless:deploy:dev
+```
+
+Don't forget if you use other AWS profiles you must could set the 
+`AWS_PROFILE` environment variable or use the `-- --aws-profile=AWS_PROFILE_NAME` option on the npm script.
+
+**If you want to do manual commands, please don't forget to build
+with webpack first**
+
+### Debug serverless handler
+
+The environment variable `APP_RUN_MODE` will define the serverless
+backend to use, if you want to debug some nodejs code of the handler
+you can set the environment variable with the correct value.
+
+
+## `@aequum` modules
+
+The boilerplate over the time becomes a framework of packages to
+use in favor to have shared components, versioning and all the 
+advantages of port to a package.
+
+### Base `aequum` modules
+
+- **[@aequum/crudl](https://github.com/fbuccioni/aequum/blob/main/packages/crudl/)**: CRUD/CRUDL operations common components
+- **[@aequum/exceptions](https://github.com/fbuccioni/aequum/blob/main/packages/exceptions/)**: Common exceptions collection
+- **[@aequum/geojson-models](https://github.com/fbuccioni/aequum/blob/main/packages/geojson-models/)**: GeoJSON models with `class-validator`
+- **[@aequum/mongoose](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Aequum mongoose tools for repository, pagination, CRUD/CRUDL, configs, and utils
+- **[@aequum/paginate-common](https://github.com/fbuccioni/aequum/blob/main/packages/paginate-common/)**: Paginated results common components
+- **[@aequum/typeorm](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Aequum TypeORM tools for repository, pagination, CRUD/CRUDL, configs, and utils
+- **[@aequum/types](https://github.com/fbuccioni/aequum/blob/main/packages/types/)**: Common types collection
+- **[@aequum/utils](https://github.com/fbuccioni/aequum/blob/main/packages/utils/)**: aequum util functions collection
+- **[@aequum/validators](https://github.com/fbuccioni/aequum/blob/main/packages/validators/)**: Custom validators for `class-validator`
+
+### NestJS `aequum` modules
+
+- **[@aequum/crudl](https://github.com/fbuccioni/aequum/blob/main/packages/crudl/)**: CRUD/CRUDL operations common components
+- **[@aequum/exceptions](https://github.com/fbuccioni/aequum/blob/main/packages/exceptions/)**: Common exceptions collection
+- **[@aequum/geojson-models](https://github.com/fbuccioni/aequum/blob/main/packages/geojson-models/)**: GeoJSON models for `class-validator`
+- **[@aequum/mongoose](https://github.com/fbuccioni/aequum/blob/main/packages/mongoose/)**: Mongoose tools
+- **[@aequum/paginate-common](https://github.com/fbuccioni/aequum/blob/main/packages/paginate-common/)**: Pagination common components
+- **[@aequum/typeorm](https://github.com/fbuccioni/aequum/blob/main/packages/typeorm/)**: TypeORM tools
+- **[@aequum/types](https://github.com/fbuccioni/aequum/blob/main/packages/types/)**: Common types collection
+- **[@aequum/utils](https://github.com/fbuccioni/aequum/blob/main/packages/utils/)**: Util functions collection
+- **[@aequum/validators](https://github.com/fbuccioni/aequum/blob/main/packages/validators/)**: Custom validators for `class-validator`
 
 
 ### Folder structure
