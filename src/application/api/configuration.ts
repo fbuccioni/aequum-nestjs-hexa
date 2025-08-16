@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import * as path from 'node:path';
 import { env as envUtils } from '@aequum/utils';
 
@@ -12,8 +12,12 @@ export default () => {
         process.env.API_LISTEN_HOST || 'localhost',
         ( +process.env.API_LISTEN_PORT ) || 8085
     ];
+    const packageJSONPossiblePaths = [
+        path.join('.', 'package.json'),
+        path.join(__dirname, '..', '..', '..', 'package.json'),
+    ];
     const { name, title, version, description }: any = JSON.parse(
-        readFileSync(path.join(__dirname, '..', '..', '..', 'package.json'), 'utf-8')
+        readFileSync(packageJSONPossiblePaths.find(p => existsSync(p)), 'utf-8')
     );
 
     return {
@@ -25,6 +29,7 @@ export default () => {
             host,
             port,
             env: process.env.NODE_ENV,
+            runMode: process.env.APP_RUN_MODE ?? 'http',
         },
         api: {
             version: process.env.API_VERSION,
