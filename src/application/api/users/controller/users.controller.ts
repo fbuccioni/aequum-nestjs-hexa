@@ -42,16 +42,17 @@ export class UsersController extends CRUDLPaginatedController(
                         op === 'list'
                         && (body as any).paginator
                     );
-                    const data = isPaginatedList ? (body as any).data: body;
+                    const data = (isPaginatedList ? (body as any).data: body);
 
                     if (Array.isArray(data))
-                        data.forEach((user) => delete user.password);
-                    else
-                        delete data.password;
+                        data.forEach((user) => delete user._doc.password);
+                    else if (data._doc)
+                        delete data._doc.password;
 
                     if (isPaginatedList) return body;
 
-                    // For non-paginated output, return uniorm data ({ data: body })
+                    // For non-paginated output, return uniorm
+                    // data (`{ data: body }`)
                     return uniformDataOutputTransform(body)
                 }
             }
