@@ -1,7 +1,8 @@
-import { Controller, ParseUUIDPipe } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CRUDLPaginatedController } from "@aequum/nestjs-crudl/controllers";
 import { uniformDataOutputTransform, UniformDataDto } from '@aequum/nestjs-uniform-data';
+import { ParseObjectIdPipe } from '@aequum/nestjs-mongoose/pipes';
 
 import { UsersService } from '../../../services/users.service';
 import { UserCreateDto } from '../../../dtos/user-create.dto';
@@ -25,7 +26,7 @@ export class UsersController extends CRUDLPaginatedController(
         },
         id: {
             type: String,
-            validationPipe: ParseUUIDPipe,
+            validationPipe: ParseObjectIdPipe,
             routeParam: 'userId',
         },
         auth: 'jwt',

@@ -1,10 +1,11 @@
+import { Types } from "mongoose";
 import { Exclude, Type } from "class-transformer";
-import { IsMongoId, IsNotEmpty, IsBoolean, IsString, IsUUID } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsBoolean, IsString } from "class-validator";
 
 
 export class User {
     @IsMongoId()
-    @Type(() => IsUUID)
+    @Type(() => Types.ObjectId)
     id: string;
 
     @IsString()
